@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import config.Config;
@@ -18,6 +19,7 @@ import pygmy.com.utils.HttpRESTUtils;
 public class UIServer {
 
     private static String catalogServerURL, orderServerURL;
+    private static FrontEndCacheManager cacheManager = null;
 
     public static void main(String args[]) throws IOException {
         System.out.println("Starting UI Server...");
@@ -45,24 +47,21 @@ public class UIServer {
         BufferedWriter delayWriter =
                 new BufferedWriter(new BufferedWriter(new FileWriter("UI.delay", false)));
 
+        // set up caches for storing topic and book lookup results
+        cacheManager = new FrontEndCacheManager();
+
         // expose the endpoints
 
         // search (only by topic)
         get("/search/:topic", (req, res) -> {
             String topic = req.params(":topic");
-            System.out.println(getTime() +
-                    "Asking CatalogServer to search for books on topic: " + topic);
-            return new JSONObject(
-                    HttpRESTUtils.httpGet(catalogServerURL + "/query/topic/" + topic));
+            return cacheManager.getTopicLookupResults(topic);
         });
 
         // lookup (only by unique id)
         get("/lookup/:bookId", (req, res) -> {
             String bookId = req.params(":bookId");
-            System.out.println(getTime() +
-                    "Asking CatalogServer to search for book: " + bookId);
-            return new JSONObject(
-                    HttpRESTUtils.httpGet(catalogServerURL + "/query/book/" + bookId));
+            return cacheManager.getBookLookupResults(bookId);
         });
 
         // buy (only accepts unique id, count defaults to 1)
@@ -157,6 +156,20 @@ public class UIServer {
 
             return buyResponse;
         });
+    }
+
+    public static JSONObject lookupTopic(String topic) throws JSONException, IOException {
+        System.out.println(getTime() +
+                "Asking CatalogServer to search for books on topic: " + topic);
+        return new JSONObject(
+                HttpRESTUtils.httpGet(catalogServerURL + "/query/topic/" + topic));
+    }
+
+    public static JSONObject lookupBook(String bookId) throws JSONException, IOException {
+        System.out.println(getTime() +
+                "Asking CatalogServer to search for book: " + bookId);
+        return new JSONObject(
+                HttpRESTUtils.httpGet(catalogServerURL + "/query/book/" + bookId));
     }
 
     // Used to get time in a readable format for logging
