@@ -1,5 +1,6 @@
 package pygmy.com.ui;
 
+import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
@@ -62,6 +63,12 @@ public class UIServer {
         get("/lookup/:bookId", (req, res) -> {
             String bookId = req.params(":bookId");
             return cacheManager.getBookLookupResults(bookId);
+        });
+
+        // invalidate endpoint to remove an entry from the cache
+        delete("/invalidate/:bookId", (req, res) -> {
+            String bookId = req.params(":bookId");
+            return cacheManager.invalidateBookLookupCache(bookId);
         });
 
         // buy (only accepts unique id, count defaults to 1)
