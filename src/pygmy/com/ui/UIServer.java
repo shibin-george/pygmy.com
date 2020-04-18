@@ -9,6 +9,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import org.json.JSONException;
@@ -19,8 +21,14 @@ import pygmy.com.utils.HttpRESTUtils;
 
 public class UIServer {
 
-    private static String catalogServerURL, orderServerURL;
     private static FrontEndCacheManager cacheManager = null;
+
+    // load balancers
+    private static RoundRobinLoadBalancer<String> catalogLoadBalancer = null;
+    private static RoundRobinLoadBalancer<String> orderLoadBalancer = null;
+
+    private static ArrayList<String> catalogServers = null;
+    private static ArrayList<String> orderServers = null;
 
     public static void main(String args[]) throws IOException {
         System.out.println("Starting UI Server...");
@@ -31,16 +39,16 @@ public class UIServer {
             System.exit(1);
         }
 
-        catalogServerURL = args[0] + ":" + Config.CATALOG_SERVER_PORT;
-        orderServerURL = args[1] + ":" + Config.ORDER_SERVER_PORT;
+        catalogServers = new ArrayList<String>();
+        catalogServers.add(prefixHTTP(args[0] + ":" + Config.CATALOG_SERVER_PORT));
+        catalogServers.add(prefixHTTP(args[1] + ":" + Config.CATALOG_SERVER_PORT));
 
-        if (!catalogServerURL.startsWith("http://")) {
-            catalogServerURL = "http://" + catalogServerURL;
-        }
+        orderServers = new ArrayList<String>();
+        orderServers.add(prefixHTTP(args[2] + ":" + Config.ORDER_SERVER_PORT));
+        orderServers.add(prefixHTTP(args[3] + ":" + Config.ORDER_SERVER_PORT));
 
-        if (!orderServerURL.startsWith("http://")) {
-            orderServerURL = "http://" + orderServerURL;
-        }
+        catalogLoadBalancer = new RoundRobinLoadBalancer<String>(2, catalogServers);
+        orderLoadBalancer = new RoundRobinLoadBalancer<String>(2, orderServers);
 
         // start listening on pre-configured port
         port(Integer.parseInt(Config.UI_SERVER_PORT));
@@ -51,7 +59,9 @@ public class UIServer {
         // set up caches for storing topic and book lookup results
         cacheManager = new FrontEndCacheManager();
 
-        // expose the endpoints
+        /*
+         * expose the UIServer REST endpoints
+         */
 
         // search (only by topic)
         get("/search/:topic", (req, res) -> {
@@ -97,7 +107,8 @@ public class UIServer {
             System.out.println("Buy request: " + buyRequest.toString(2));
 
             JSONObject buyResponse = new JSONObject(
-                    HttpRESTUtils.httpPostJSON(orderServerURL + "/buy", buyRequest));
+                    HttpRESTUtils.httpPostJSON(orderLoadBalancer.get()
+                            + "/buy", buyRequest));
 
             if (buyResponse.getInt("code") == 0) {
                 buyResponse.put("Status", "Successfully bought the book(s)!");
@@ -144,7 +155,8 @@ public class UIServer {
                     "Asking OrderServer to buy book: " + bookId);
 
             JSONObject buyResponse = new JSONObject(
-                    HttpRESTUtils.httpPostJSON(orderServerURL + "/buy", buyRequest));
+                    HttpRESTUtils.httpPostJSON(orderLoadBalancer.get()
+                            + "/buy", buyRequest));
 
             if (buyResponse.getInt("code") == 0) {
                 buyResponse.put("Status", "Successfully bought the book(s)!");
@@ -165,18 +177,22 @@ public class UIServer {
         });
     }
 
-    public static JSONObject lookupTopic(String topic) throws JSONException, IOException {
+    public static JSONObject lookupTopic(String topic)
+            throws JSONException, IOException, InterruptedException {
         System.out.println(getTime() +
                 "Asking CatalogServer to search for books on topic: " + topic);
         return new JSONObject(
-                HttpRESTUtils.httpGet(catalogServerURL + "/query/topic/" + topic));
+                HttpRESTUtils.httpGet(catalogLoadBalancer.get()
+                        + "/query/topic/" + topic));
     }
 
-    public static JSONObject lookupBook(String bookId) throws JSONException, IOException {
+    public static JSONObject lookupBook(String bookId)
+            throws JSONException, IOException, InterruptedException {
         System.out.println(getTime() +
                 "Asking CatalogServer to search for book: " + bookId);
         return new JSONObject(
-                HttpRESTUtils.httpGet(catalogServerURL + "/query/book/" + bookId));
+                HttpRESTUtils.httpGet(catalogLoadBalancer.get()
+                        + "/query/book/" + bookId));
     }
 
     // Used to get time in a readable format for logging
@@ -187,4 +203,14 @@ public class UIServer {
         return ("UIServer : tid=" + Thread.currentThread().getId() + " : "
                 + sdf.format(resultdate) + " :: ");
     }
+
+    public static String prefixHTTP(String t) {
+
+        if (!t.startsWith("http://")) {
+            return "http://" + t;
+        }
+
+        return t;
+    }
+
 }

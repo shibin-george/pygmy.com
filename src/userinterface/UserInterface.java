@@ -27,6 +27,8 @@ public class UserInterface {
             uiServerURL = "http://" + uiServerURL;
         }
 
+        System.out.println("Contacting UIServer at " + uiServerURL);
+
         try {
             scanner = new Scanner(System.in);
             int op = 0;
