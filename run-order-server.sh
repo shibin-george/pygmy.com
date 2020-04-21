@@ -24,6 +24,8 @@ fi
 
 INDEX=${@:(-1)}
 
+UI_IP=
+
 CP=$(find lib/ -iname "*.jar" -exec readlink -f {} \; | tr '\n' ':')
 
 PWD=`pwd`
@@ -31,4 +33,4 @@ ORDER_WAL="$PWD/OrderServer$INDEX.WAL"
 ORDER_OUTPUT="$PWD/order-server$INDEX.out"
 
 cd bin/
-java -cp $CP:. pygmy.com.order.OrderServer $1 $ORDER_WAL pygmy/com/order/OrderServer.class > $ORDER_OUTPUT 2>&1 &
+java -cp $CP:. pygmy.com.order.OrderServer $1 $ORDER_WAL $UI_IP pygmy/com/order/OrderServer.class > $ORDER_OUTPUT 2>&1 &

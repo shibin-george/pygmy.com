@@ -28,4 +28,4 @@ PWD=`pwd`
 UI_OUTPUT="$PWD/ui-server.out"
 
 cd bin/
-java -cp $CP:. pygmy.com.ui.UIServer $1 $2 $3 $4 pygmy/com/ui/UIServer.class > $UI_OUTPUT 2>&1 &
+java -cp $CP:. pygmy.com.ui.UIServer pygmy/com/ui/UIServer.class > $UI_OUTPUT 2>&1 &

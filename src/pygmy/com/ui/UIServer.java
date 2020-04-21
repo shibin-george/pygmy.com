@@ -8,15 +8,19 @@ import static spark.Spark.post;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import config.Config;
+import pygmy.com.scheduler.HeartbeatMonitor;
+import pygmy.com.scheduler.PygmyJob;
+import pygmy.com.scheduler.RoundRobinLoadBalancer;
 import pygmy.com.utils.HttpRESTUtils;
 
 public class UIServer {
@@ -24,14 +28,23 @@ public class UIServer {
     private static FrontEndCacheManager cacheManager = null;
 
     // load balancers
-    private static RoundRobinLoadBalancer<String> catalogLoadBalancer = null;
-    private static RoundRobinLoadBalancer<String> orderLoadBalancer = null;
+    private static RoundRobinLoadBalancer<String> catalogLoadBalancer = null,
+            orderLoadBalancer = null;
 
-    private static ArrayList<String> catalogServers = null;
-    private static ArrayList<String> orderServers = null;
+    // heartbeat monitors
+    private static HeartbeatMonitor<String, String, String, JSONObject> catalogHeartbeatMonitor =
+            null;
+    private static HeartbeatMonitor<String, JSONObject, String, JSONObject> orderHeartbeatMonitor =
+            null;
 
-    public static void main(String args[]) throws IOException {
-        System.out.println("Starting UI Server...");
+    // own IP address
+    private static String ipAddress;
+
+    public static void main(String args[]) throws IOException, InterruptedException {
+        InetAddress ip = InetAddress.getLocalHost();
+        ipAddress = prefixHTTP(ip.getHostAddress() + ":" + Config.UI_SERVER_PORT);
+
+        System.out.println("UI Server, running on " + ipAddress + "...");
 
         if (args.length == 0) {
             System.out
@@ -39,16 +52,13 @@ public class UIServer {
             System.exit(1);
         }
 
-        catalogServers = new ArrayList<String>();
-        catalogServers.add(prefixHTTP(args[0] + ":" + Config.CATALOG_SERVER_PORT));
-        catalogServers.add(prefixHTTP(args[1] + ":" + Config.CATALOG_SERVER_PORT));
+        catalogLoadBalancer = new RoundRobinLoadBalancer<String>(5);
+        orderLoadBalancer = new RoundRobinLoadBalancer<String>(5);
 
-        orderServers = new ArrayList<String>();
-        orderServers.add(prefixHTTP(args[2] + ":" + Config.ORDER_SERVER_PORT));
-        orderServers.add(prefixHTTP(args[3] + ":" + Config.ORDER_SERVER_PORT));
-
-        catalogLoadBalancer = new RoundRobinLoadBalancer<String>(2, catalogServers);
-        orderLoadBalancer = new RoundRobinLoadBalancer<String>(2, orderServers);
+        catalogHeartbeatMonitor =
+                new HeartbeatMonitor<String, String, String, JSONObject>(catalogLoadBalancer);
+        orderHeartbeatMonitor =
+                new HeartbeatMonitor<String, JSONObject, String, JSONObject>(orderLoadBalancer);
 
         // start listening on pre-configured port
         port(Integer.parseInt(Config.UI_SERVER_PORT));
@@ -57,7 +67,7 @@ public class UIServer {
                 new BufferedWriter(new BufferedWriter(new FileWriter("UI.delay", false)));
 
         // set up caches for storing topic and book lookup results
-        cacheManager = new FrontEndCacheManager();
+        cacheManager = new FrontEndCacheManager(catalogHeartbeatMonitor);
 
         /*
          * expose the UIServer REST endpoints
@@ -66,13 +76,17 @@ public class UIServer {
         // search (only by topic)
         get("/search/:topic", (req, res) -> {
             String topic = req.params(":topic");
-            return cacheManager.getTopicLookupResults(topic);
+            String jobId = req.hashCode() + "-" +
+                    System.currentTimeMillis() + "-" + Thread.currentThread().getId();
+            return cacheManager.getTopicLookupResults(topic, jobId);
         });
 
         // lookup (only by unique id)
         get("/lookup/:bookId", (req, res) -> {
             String bookId = req.params(":bookId");
-            return cacheManager.getBookLookupResults(bookId);
+            String jobId = req.hashCode() + "-" +
+                    System.currentTimeMillis() + "-" + Thread.currentThread().getId();
+            return cacheManager.getBookLookupResults(bookId, jobId);
         });
 
         // invalidate endpoint to remove an entry from the cache
@@ -88,9 +102,6 @@ public class UIServer {
             String bookId = req.params(":bookId");
             int toBuy = 1;
 
-            // get UIServer timestamp
-            long timeStamp = System.currentTimeMillis();
-
             System.out.println(getTime() +
                     "Asking OrderServer to buy book: " + bookId);
 
@@ -98,17 +109,22 @@ public class UIServer {
             JSONObject buyRequest = new JSONObject();
             buyRequest.put("bookId", bookId);
             buyRequest.put("updateBy", -1 * toBuy);
-            buyRequest.put("UIServerTimeStamp", timeStamp);
+            buyRequest.put("UIServerTimeStamp", entryTS);
 
             String orderId = "#OD" + buyRequest.hashCode() + "-" +
-                    Thread.currentThread().getId();
+                    entryTS + "-" + Thread.currentThread().getId();
             buyRequest.put("orderId", orderId);
 
-            System.out.println("Buy request: " + buyRequest.toString(2));
+            buyBook(buyRequest, orderId);
 
-            JSONObject buyResponse = new JSONObject(
-                    HttpRESTUtils.httpPostJSON(orderLoadBalancer.get()
-                            + "/buy", buyRequest));
+            // spin until the request is processed
+            while (!orderHeartbeatMonitor.isJobComplete(orderId)) {
+                // check again after a second
+                Thread.sleep(1000);
+            }
+
+            JSONObject buyResponse = new JSONObject(orderHeartbeatMonitor.getResponse(orderId));
+            orderHeartbeatMonitor.cleanupJob(orderId);
 
             if (buyResponse.getInt("code") == 0) {
                 buyResponse.put("Status", "Successfully bought the book(s)!");
@@ -117,7 +133,7 @@ public class UIServer {
                         "Couldn't buy the book. See OrderStatus/CatalogStatus for more details.");
             }
 
-            buyResponse.put("UIServerTimeStamp", timeStamp);
+            buyResponse.put("UIServerTimeStamp", entryTS);
             buyResponse.put("orderId", orderId);
 
             long exitTS = System.currentTimeMillis();
@@ -136,27 +152,32 @@ public class UIServer {
             String bookId = buyRequest.getString("bookId");
             int toBuy = buyRequest.getInt("count");
 
-            // get UIServer timestamp
-            long timeStamp = System.currentTimeMillis();
-
             System.out.println(getTime() +
                     "Asking OrderServer to buy book: " + bookId);
 
             // create a JSON request to send to OrderServer
             buyRequest.put("updateBy", -1 * toBuy);
             buyRequest.remove("count");
-            buyRequest.put("UIServerTimeStamp", timeStamp);
+            buyRequest.put("UIServerTimeStamp", entryTS);
 
             String orderId = "#OD" + buyRequest.hashCode() + "-" +
-                    Thread.currentThread().getId();
+                    entryTS + "-" + Thread.currentThread().getId();
             buyRequest.put("orderId", orderId);
+            buyRequest.put("replyTo", ipAddress);
 
             System.out.println(getTime() +
                     "Asking OrderServer to buy book: " + bookId);
 
-            JSONObject buyResponse = new JSONObject(
-                    HttpRESTUtils.httpPostJSON(orderLoadBalancer.get()
-                            + "/buy", buyRequest));
+            buyBook(buyRequest, orderId);
+
+            // spin until the request is processed
+            while (!orderHeartbeatMonitor.isJobComplete(orderId)) {
+                // check again after a second
+                Thread.sleep(1000);
+            }
+
+            JSONObject buyResponse = new JSONObject(orderHeartbeatMonitor.getResponse(orderId));
+            orderHeartbeatMonitor.cleanupJob(orderId);
 
             if (buyResponse.getInt("code") == 0) {
                 buyResponse.put("Status", "Successfully bought the book(s)!");
@@ -165,7 +186,7 @@ public class UIServer {
                         "Couldn't buy the book(s). See OrderStatus/CatalogStatus for more details.");
             }
 
-            buyResponse.put("UIServerTimeStamp", timeStamp);
+            buyResponse.put("UIServerTimeStamp", entryTS);
             buyResponse.put("orderId", orderId);
 
             long exitTS = System.currentTimeMillis();
@@ -175,24 +196,150 @@ public class UIServer {
 
             return buyResponse;
         });
+
+        // REST end-point for catalog-server to mark a Job as completed
+        post("/catalog/ack/:jobId", (req, res) -> {
+            String jobId = req.params(":jobId");
+            catalogHeartbeatMonitor.markJobCompleted(jobId);
+            return getDummyJSONObject();
+        });
+
+        // REST end-point for order-server to mark a Job as completed
+        post("/order/ack/:jobId", (req, res) -> {
+            String jobId = req.params(":jobId");
+            orderHeartbeatMonitor.markJobCompleted(jobId);
+            return getDummyJSONObject();
+        });
+
+        // catalogLoadBalancer.add("http://128.119.243.175:35640");
+        // catalogLoadBalancer.add("http://128.119.243.147:35640");
+
+        // REST end-point for catalog-server to add itself to the load-balancer
+        post("/catalog/add", (req, res) -> {
+            System.out.println(req.body());
+            JSONObject server = new JSONObject(req.body());
+            catalogLoadBalancer.add((String) server.get("URL"));
+            return getDummyJSONObject();
+        });
+
+        // REST end-point for order-server to add itself to the load-balancer
+        post("/order/add", (req, res) -> {
+            JSONObject server = new JSONObject(req.body());
+            orderLoadBalancer.add((String) server.get("URL"));
+            return getDummyJSONObject();
+        });
+
+        Thread jobRecoveryThread = new Thread(new Runnable() {
+
+            int RECOVERY_WAKEUP_TIMEOUT_IN_MILLISECONDS = 5000;
+
+            @Override
+            public void run() {
+                while (true) {
+                    retryCatalogServerJobs(catalogHeartbeatMonitor.getIncompleteJobs());
+                    retryOrderServerJobs(orderHeartbeatMonitor.getIncompleteJobs());
+
+                    try {
+                        Thread.sleep(RECOVERY_WAKEUP_TIMEOUT_IN_MILLISECONDS);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            private void retryOrderServerJobs(
+                    ArrayList<PygmyJob<String, JSONObject, String>> incompleteJobs) {
+                for (PygmyJob<String, JSONObject, String> job : incompleteJobs) {
+                    if (job.getJobType().equals("BUY")) {
+                        try {
+                            buyBook(job.getParameter(), job.getJobId());
+                        } catch (JSONException | IOException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+            }
+
+            private void retryCatalogServerJobs(
+                    ArrayList<PygmyJob<String, String, String>> incompleteJobs) {
+                for (PygmyJob<String, String, String> job : incompleteJobs) {
+
+                    try {
+                        if (job.getJobType().equals("LOOKUP_TOPIC")) {
+                            // re-attempt the job hopefully on a new server
+                            lookupTopic(job.getParameter(), job.getJobId());
+                        } else if (job.getJobType().equals("LOOKUP_BOOK")) {
+                            // re-attempt the job hopefully on a new server
+                            lookupBook(job.getParameter(), job.getJobId());
+                        }
+                    } catch (JSONException | IOException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        jobRecoveryThread.start();
     }
 
-    public static JSONObject lookupTopic(String topic)
+    public static void lookupTopic(String topic, String jobId)
             throws JSONException, IOException, InterruptedException {
         System.out.println(getTime() +
                 "Asking CatalogServer to search for books on topic: " + topic);
-        return new JSONObject(
-                HttpRESTUtils.httpGet(catalogLoadBalancer.get()
-                        + "/query/topic/" + topic));
+
+        String catalogServer = catalogLoadBalancer.get();
+        PygmyJob<String, String, String> lookupTopicJob =
+                new PygmyJob<String, String, String>(jobId, "LOOKUP_TOPIC", catalogServer, topic);
+
+        // add the job to catalog-heartbeat monitor
+        catalogHeartbeatMonitor.markJobStarted(lookupTopicJob);
+
+        String response = HttpRESTUtils.httpGet(catalogServer
+                + "/query/topic/" + topic + "@" + jobId);
+
+        if (response != null) {
+            catalogHeartbeatMonitor.addResponse(jobId, new JSONObject(response));
+        }
     }
 
-    public static JSONObject lookupBook(String bookId)
+    public static void lookupBook(String bookId, String jobId)
             throws JSONException, IOException, InterruptedException {
         System.out.println(getTime() +
                 "Asking CatalogServer to search for book: " + bookId);
-        return new JSONObject(
-                HttpRESTUtils.httpGet(catalogLoadBalancer.get()
-                        + "/query/book/" + bookId));
+
+        String catalogServer = catalogLoadBalancer.get();
+        PygmyJob<String, String, String> lookupBookJob =
+                new PygmyJob<String, String, String>(jobId, "LOOKUP_BOOK", catalogServer, bookId);
+
+        catalogHeartbeatMonitor.markJobStarted(lookupBookJob);
+
+        String response = HttpRESTUtils.httpGet(catalogServer
+                + "/query/book/" + bookId + "@" + jobId);
+
+        if (response != null) {
+            catalogHeartbeatMonitor.addResponse(jobId, new JSONObject(response));
+        }
+    }
+
+    public static void buyBook(JSONObject buyRequest, String jobId)
+            throws InterruptedException, ConnectException, JSONException, IOException {
+
+        // tell the heart-beat monitor to track this job
+        String orderServer = orderLoadBalancer.get();
+        PygmyJob<String, JSONObject, String> buyJob =
+                new PygmyJob<String, JSONObject, String>(jobId, "BUY", orderServer,
+                        buyRequest);
+
+        orderHeartbeatMonitor.markJobStarted(buyJob);
+
+        String response = HttpRESTUtils.httpPostJSON(orderServer
+                + "/buy", buyRequest);
+
+        if (response != null) {
+            orderHeartbeatMonitor.addResponse(jobId, new JSONObject(response));
+        }
     }
 
     // Used to get time in a readable format for logging
@@ -204,13 +351,17 @@ public class UIServer {
                 + sdf.format(resultdate) + " :: ");
     }
 
-    public static String prefixHTTP(String t) {
-
-        if (!t.startsWith("http://")) {
-            return "http://" + t;
+    public static String prefixHTTP(String url) {
+        if (!url.startsWith("http://")) {
+            return "http://" + url;
         }
+        return url;
+    }
 
-        return t;
+    public static JSONObject getDummyJSONObject() {
+        JSONObject object = new JSONObject();
+        object.put("dummy", "dummy");
+        return object;
     }
 
 }

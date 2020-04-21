@@ -23,7 +23,7 @@ CP=$(find lib/ -iname "*.jar" -exec readlink -f {} \; | tr '\n' ':')
 PWD=`pwd`
 
 # UI server
-ssh $USER@$UI_SERVER "cd $PWD && ./run-ui-server.sh $CATALOG_IP1 $CATALOG_IP2 $ORDER_IP1 $ORDER_IP2 $CLEAN"
+ssh $USER@$UI_SERVER "cd $PWD && ./run-ui-server.sh $CLEAN"
 ssh $USER@$UI_SERVER "cd $PWD && ps -ef > ps.ui"
 if grep -q "pygmy.com.ui.UIServer" ps.ui;
 then
@@ -33,7 +33,7 @@ else
 fi
 
 # Catalog server replica 1
-ssh $USER@$CATALOG_SERVER1 "cd $PWD && ./run-catalog-server.sh 1 $CLEAN"
+ssh $USER@$CATALOG_SERVER1 "cd $PWD && ./run-catalog-server.sh $UI_IP 1 $CLEAN"
 ssh $USER@$CATALOG_SERVER1 "cd $PWD && ps -ef > ps.cat"
 if grep -q "pygmy.com.catalog.CatalogServer" ps.cat;
 then
@@ -43,7 +43,7 @@ else
 fi
 
 # Catalog server replica 2
-ssh $USER@$CATALOG_SERVER2 "cd $PWD && ./run-catalog-server.sh 2 $CLEAN"
+ssh $USER@$CATALOG_SERVER2 "cd $PWD && ./run-catalog-server.sh $UI_IP 2 $CLEAN"
 ssh $USER@$CATALOG_SERVER2 "cd $PWD && ps -ef > ps.cat"
 if grep -q "pygmy.com.catalog.CatalogServer" ps.cat;
 then
