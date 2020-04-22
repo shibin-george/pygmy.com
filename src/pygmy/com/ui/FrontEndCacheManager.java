@@ -94,7 +94,7 @@ public class FrontEndCacheManager {
                 System.out.println(getTime() + "Result for this query is already in Cache!");
             }
 
-            bookLookupResult = bookLookupCache.get(jobId);
+            bookLookupResult = bookLookupCache.get(bookId);
 
         } catch (InterruptedException e) {
             e.printStackTrace();

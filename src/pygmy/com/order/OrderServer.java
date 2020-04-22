@@ -6,12 +6,18 @@ import static spark.Spark.post;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import config.Config;
+import pygmy.com.scheduler.HeartbeatMonitor;
+import pygmy.com.scheduler.RoundRobinLoadBalancer;
+import pygmy.com.ui.UIServer;
 import pygmy.com.utils.HttpRESTUtils;
 import pygmy.com.wal.OrderWriteAheadLogger;
 
@@ -19,9 +25,20 @@ public class OrderServer {
 
     private static String catalogServerURL;
 
-    public static void main(String[] args) throws IOException {
+    // load balancers
+    private static RoundRobinLoadBalancer<String> catalogLoadBalancer = null;
 
-        System.out.println("Starting Order Server...");
+    // heart-beat monitors
+    private static HeartbeatMonitor<String, String, String, JSONObject> catalogHeartbeatMonitor =
+            null;
+
+    private static String uiIpAddress, ipAddress;
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+        InetAddress ip = InetAddress.getLocalHost();
+        ipAddress = UIServer.prefixHTTP(ip.getHostAddress() + ":" + Config.ORDER_SERVER_PORT);
+        System.out.println("Order Server, running on " + ipAddress + "...");
 
         // the first argument for the order server should be the
         // the URL for the CatalogServer
@@ -31,11 +48,7 @@ public class OrderServer {
             System.exit(1);
         }
 
-        catalogServerURL = args[0] + ":" + Config.CATALOG_SERVER_PORT;
-
-        if (!catalogServerURL.startsWith("http://")) {
-            catalogServerURL = "http://" + catalogServerURL;
-        }
+        uiIpAddress = UIServer.prefixHTTP(args[0] + ":" + Config.UI_SERVER_PORT);
 
         // start listening on pre-configured port
         port(Integer.parseInt(Config.ORDER_SERVER_PORT));
@@ -44,6 +57,11 @@ public class OrderServer {
         OrderWriteAheadLogger oWALogger = new OrderWriteAheadLogger(args[1]);
         BufferedWriter delayWriter =
                 new BufferedWriter(new BufferedWriter(new FileWriter(args[1] + ".delay", false)));
+
+        // set up load-balancer and the heartbeat-monitor
+        catalogLoadBalancer = new RoundRobinLoadBalancer<String>(5);
+        catalogHeartbeatMonitor =
+                new HeartbeatMonitor<String, String, String, JSONObject>(catalogLoadBalancer);
 
         // expose the endpoints
 
@@ -64,7 +82,8 @@ public class OrderServer {
                     getTime() + "Querying CatalogServer for book: " + bookId);
 
             JSONObject queryResponse = new JSONObject(
-                    HttpRESTUtils.httpGet(catalogServerURL + "/query/book/" + bookId));
+                    HttpRESTUtils.httpGet(catalogServerURL + "/query/book/" + bookId,
+                            Config.DEBUG));
 
             res.type("application/json");
             JSONObject updateResponse = null;
@@ -76,7 +95,7 @@ public class OrderServer {
 
                 // enough items in stock; proceed to buy
                 updateResponse = new JSONObject(HttpRESTUtils
-                        .httpPostJSON(catalogServerURL + "/update", updateRequest));
+                        .httpPostJSON(catalogServerURL + "/update", updateRequest, Config.DEBUG));
 
                 // check if update was successful
                 if (updateResponse.getInt("Stock") >= 0) {
@@ -114,6 +133,48 @@ public class OrderServer {
 
             return updateResponse;
         });
+
+        // REST end-point for ui-server to add catalog-server to the load-balancer
+        post("/catalog/add", (req, res) -> {
+            JSONObject server = new JSONObject(req.body());
+            JSONArray catalogServers = server.getJSONArray("catalog-servers");
+            for (int i = 0; i < catalogServers.length(); i++) {
+                catalogLoadBalancer.add(catalogServers.getString(i));
+            }
+            return UIServer.getDummyJSONObject();
+        });
+
+        Thread.sleep(1000);
+
+        // now that everything is done (including possibly recovery),
+        // introduce self to the front-end server
+        introduceSelfToUIServer();
+
+    }
+
+    private static void introduceSelfToUIServer() throws ConnectException, IOException {
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject request = new JSONObject();
+                request.put("URL", ipAddress);
+
+                while (true) {
+                    try {
+                        HttpRESTUtils.httpPostJSON(uiIpAddress + "/order/add", request,
+                                Config.DEBUG);
+
+                        // do it again after 20 seconds
+                        Thread.sleep(20000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        thread.start();
     }
 
     // Used to get time in a readable format for logging

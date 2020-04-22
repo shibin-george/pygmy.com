@@ -2,18 +2,20 @@ package pygmy.com.scheduler;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public class RoundRobinLoadBalancer<T> {
 
-    private HashSet<T> serverSet = null;
     private BlockingQueue<T> blockingQueue = null;
+
+    private int identifer;
+    private HashMap<T, Integer> serverSet;
 
     public RoundRobinLoadBalancer(int capacity) {
         blockingQueue = new ArrayBlockingQueue<T>(capacity, true);
-        serverSet = new HashSet<T>();
+        serverSet = new HashMap<T, Integer>();
     }
 
     public synchronized T get() throws InterruptedException {
@@ -32,15 +34,21 @@ public class RoundRobinLoadBalancer<T> {
         System.out.println(getTime() + "Removing server: " + t + " from the load-balancer!");
         // remove all instances of t from the load-balancer's queue
         blockingQueue.removeIf(e -> (t.equals(e)));
-        serverSet.remove(t);
+
+        if (serverSet.containsKey(t))
+            serverSet.remove(t);
     }
 
     public synchronized void add(T t) throws InterruptedException {
-        if (!serverSet.contains(t)) {
+        if (!serverSet.containsKey(t)) {
             System.out.println(getTime() + "Adding server: " + t + " to the load-balancer!");
-            serverSet.add(t);
+            serverSet.put(t, identifer++);
             blockingQueue.put(t);
         }
+    }
+
+    public synchronized HashMap<T, Integer> getAllServers() {
+        return serverSet;
     }
 
     // Used to get time in a readable format for logging

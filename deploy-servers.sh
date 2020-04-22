@@ -53,7 +53,7 @@ else
 fi
 
 # Order server replica 1
-ssh $USER@$ORDER_SERVER1 "cd $PWD && ./run-order-server.sh $CATALOG_IP1 $CATALOG_IP2 1 $CLEAN"
+ssh $USER@$ORDER_SERVER1 "cd $PWD && ./run-order-server.sh $UI_IP 1 $CLEAN"
 ssh $USER@$ORDER_SERVER1 "cd $PWD && ps -ef > ps.ord"
 if grep -q "pygmy.com.order.OrderServer" ps.ord;
 then
@@ -63,7 +63,7 @@ else
 fi
 
 # Order server replica 2
-ssh $USER@$ORDER_SERVER2 "cd $PWD && ./run-order-server.sh $CATALOG_IP1 $CATALOG_IP2 2 $CLEAN"
+ssh $USER@$ORDER_SERVER2 "cd $PWD && ./run-order-server.sh $UI_IP 2 $CLEAN"
 ssh $USER@$ORDER_SERVER2 "cd $PWD && ps -ef > ps.ord"
 if grep -q "pygmy.com.order.OrderServer" ps.ord;
 then

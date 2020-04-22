@@ -1,6 +1,5 @@
 package userinterface;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 import org.json.JSONException;
@@ -40,29 +39,33 @@ public class UserInterface {
 
                     String topicName = chooseFromTopics();
                     System.out.println(new JSONObject(
-                            HttpRESTUtils.httpGet(uiServerURL + "/search/" + topicName))
-                                    .toString(2));
+                            HttpRESTUtils.httpGet(uiServerURL + "/search/" + topicName,
+                                    Config.DEBUG))
+                                            .toString(2));
                     break;
                 case 2: // lookup
                     String lookupBookId = chooseBookId();
                     System.out.println(new JSONObject(
-                            HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + lookupBookId))
-                                    .toString(2));
+                            HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + lookupBookId,
+                                    Config.DEBUG))
+                                            .toString(2));
                     break;
                 case 3: // buy
                     String buyBookId = chooseBookId();
                     int numItems = chooseCount();
                     if (numItems == 1) {
                         System.out.println(new JSONObject(
-                                HttpRESTUtils.httpPost(uiServerURL + "/buy/" + buyBookId))
-                                        .toString(2));
+                                HttpRESTUtils.httpPost(uiServerURL + "/buy/" + buyBookId,
+                                        Config.DEBUG))
+                                                .toString(2));
                     } else {
                         JSONObject buyRequest = new JSONObject();
                         buyRequest.put("bookId", buyBookId);
                         buyRequest.put("count", numItems);
                         System.out.println(new JSONObject(
-                                HttpRESTUtils.httpPostJSON(uiServerURL + "/multibuy", buyRequest))
-                                        .toString(2));
+                                HttpRESTUtils.httpPostJSON(uiServerURL + "/multibuy", buyRequest,
+                                        Config.DEBUG))
+                                                .toString(2));
                     }
                     break;
                 case 0:
@@ -73,8 +76,6 @@ public class UserInterface {
         } catch (NumberFormatException e) {
             System.out.println("Invalid input! Exiting..");
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }

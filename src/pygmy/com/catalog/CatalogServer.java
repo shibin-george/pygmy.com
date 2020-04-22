@@ -12,11 +12,13 @@ import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import config.Config;
+import pygmy.com.mutex.MutualExclusionLockManager;
 import pygmy.com.ui.UIServer;
 import pygmy.com.utils.HttpRESTUtils;
 import pygmy.com.wal.CatalogWriteAheadLogger;
@@ -29,7 +31,10 @@ public class CatalogServer {
     private static String uiIpAddress = "";
     private static String ipAddress;
 
-    public static void main(String[] args) throws IOException {
+    private static MutualExclusionLockManager lockManager = null;
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+
         InetAddress ip = InetAddress.getLocalHost();
         ipAddress = UIServer.prefixHTTP(ip.getHostAddress() + ":" + Config.CATALOG_SERVER_PORT);
         System.out.println("Catalog Server, running on " + ipAddress + "...");
@@ -59,9 +64,9 @@ public class CatalogServer {
             // resync
         }
 
-        // now that everything is done (including possibly recovery),
-        // introduce self to the front-end server
-        introduceSelfToUIServer();
+        // set up lock-manager for the token-ring distributed
+        // mutual exclusion algorithm
+        lockManager = new MutualExclusionLockManager();
 
         if (!catalogDb.init(initialInventoryPath)) {
             System.out.println(getTime() + "INIT of DB from on-disk file failed! Exiting..");
@@ -95,7 +100,7 @@ public class CatalogServer {
 
                 @Override
                 public void run() {
-                    HttpRESTUtils.httpPost(uiIpAddress + "/catalog/ack/" + params[1]);
+                    HttpRESTUtils.httpPost(uiIpAddress + "/catalog/ack/" + params[1], Config.DEBUG);
                 }
             });
             ackThread.start();
@@ -126,7 +131,7 @@ public class CatalogServer {
 
                 @Override
                 public void run() {
-                    HttpRESTUtils.httpPost(uiIpAddress + "/catalog/ack/" + params[1]);
+                    HttpRESTUtils.httpPost(uiIpAddress + "/catalog/ack/" + params[1], Config.DEBUG);
                 }
             });
             ackThread.start();
@@ -178,6 +183,25 @@ public class CatalogServer {
             delayWriter.flush();
             return jsonObject;
         });
+
+        // REST end-point for order-server to add itself to the load-balancer
+        post("/uibroadcast", (req, res) -> {
+            JSONObject jsonObject = new JSONObject(req.body());
+
+            Iterator<String> keys = jsonObject.keys();
+
+            while (keys.hasNext()) {
+                String key = keys.next();
+            }
+
+            return UIServer.getDummyJSONObject();
+        });
+
+        Thread.sleep(1000);
+
+        // now that everything is done (including possibly recovery),
+        // introduce self to the front-end server
+        introduceSelfToUIServer();
     }
 
     private static void introduceSelfToUIServer() throws ConnectException, IOException {
@@ -190,14 +214,16 @@ public class CatalogServer {
 
                 while (true) {
                     try {
-                        HttpRESTUtils.httpPostJSON(uiIpAddress + "/catalog/add", request);
+                        JSONObject response = new JSONObject(
+                                HttpRESTUtils.httpPostJSON(uiIpAddress + "/catalog/add", request, Config.DEBUG));
+
+                        // check if we have the lock
+                        if (response.optString("token", "false").equals("true")) {
+                            lockManager.setLockToAcquired();
+                        }
 
                         // do it again after 20 seconds
                         Thread.sleep(20000);
-                    } catch (ConnectException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

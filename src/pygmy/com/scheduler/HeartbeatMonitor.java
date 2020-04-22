@@ -16,7 +16,7 @@ public class HeartbeatMonitor<JobIDType, JobParameterType, LoadBalancerType, Job
     private RoundRobinLoadBalancer<LoadBalancerType> loadBalancer;
     private HashMap<JobIDType, JobResponseType> responseMap;
 
-    private Long JOB_TIMEOUT_IN_MILLISECONDS = (long) 5000;
+    private Long JOB_TIMEOUT_IN_MILLISECONDS = (long) 2000;
 
     public HeartbeatMonitor(RoundRobinLoadBalancer<LoadBalancerType> loadBalancer) {
         this.loadBalancer = loadBalancer;

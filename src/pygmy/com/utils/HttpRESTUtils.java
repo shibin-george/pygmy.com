@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -12,7 +11,7 @@ import org.json.JSONObject;
 
 public class HttpRESTUtils {
 
-    public static String httpGet(String urlString) {
+    public static String httpGet(String urlString, boolean log) {
 
         try {
             URL url = new URL(urlString);
@@ -34,12 +33,13 @@ public class HttpRESTUtils {
 
             return response.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            if (log)
+                e.printStackTrace();
             return null;
         }
     }
 
-    public static String httpPost(String urlString) {
+    public static String httpPost(String urlString, boolean log) {
 
         try {
             URL url = new URL(urlString);
@@ -69,13 +69,14 @@ public class HttpRESTUtils {
 
             return response.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            if (log)
+                e.printStackTrace();
             return null;
         }
     }
 
     public static String httpPostJSON(String urlString,
-            JSONObject jsonObject) throws IOException, ConnectException {
+            JSONObject jsonObject, boolean log) {
 
         try {
             URL url = new URL(urlString);
@@ -115,9 +116,9 @@ public class HttpRESTUtils {
 
             return response.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            if (log)
+                e.printStackTrace();
             return null;
         }
     }
-
 }

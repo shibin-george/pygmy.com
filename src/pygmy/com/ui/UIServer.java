@@ -13,7 +13,9 @@ import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,7 +42,11 @@ public class UIServer {
     // own IP address
     private static String ipAddress;
 
+    // the first CatalogServer that contacts UIServer is handed the lock
+    private static boolean tokenHandedOut = false;
+
     public static void main(String args[]) throws IOException, InterruptedException {
+
         InetAddress ip = InetAddress.getLocalHost();
         ipAddress = prefixHTTP(ip.getHostAddress() + ":" + Config.UI_SERVER_PORT);
 
@@ -216,10 +222,42 @@ public class UIServer {
 
         // REST end-point for catalog-server to add itself to the load-balancer
         post("/catalog/add", (req, res) -> {
-            System.out.println(req.body());
             JSONObject server = new JSONObject(req.body());
-            catalogLoadBalancer.add((String) server.get("URL"));
-            return getDummyJSONObject();
+            catalogLoadBalancer.add(server.getString("URL"));
+
+            JSONObject response = getDummyJSONObject();
+            if (!tokenHandedOut) {
+                // first catalog-server to approach us
+                // Hand out the token to it
+                response.put("token", "true");
+                System.out.println(getTime() +
+                        "Token handed out to " + server.getString("URL"));
+                tokenHandedOut = true;
+            }
+
+            // inform order-servers about all of the catalog-server replicas
+            JSONObject introResponse = new JSONObject();
+            JSONArray cServerArray = new JSONArray();
+            for (String cServer : catalogLoadBalancer.getAllServers().keySet()) {
+                cServerArray.put(cServer);
+            }
+            introResponse.put("catalog-servers", cServerArray);
+            for (String oServer : orderLoadBalancer.getAllServers().keySet()) {
+                HttpRESTUtils.httpPostJSON(oServer + "/catalog/add", introResponse, Config.DEBUG);
+            }
+
+            // inform all catalog-servers about all catalog-servers
+            JSONObject catalogBroadcast = new JSONObject();
+            HashMap<String, Integer> cServerMap = catalogLoadBalancer.getAllServers();
+            for (String cServer : cServerMap.keySet()) {
+                catalogBroadcast.put(cServer, cServerMap.get(cServer));
+            }
+            for (String cServer : catalogLoadBalancer.getAllServers().keySet()) {
+                HttpRESTUtils.httpPostJSON(cServer + "/uibroadcast", catalogBroadcast,
+                        Config.DEBUG);
+            }
+
+            return response;
         });
 
         // REST end-point for order-server to add itself to the load-balancer
@@ -231,7 +269,7 @@ public class UIServer {
 
         Thread jobRecoveryThread = new Thread(new Runnable() {
 
-            int RECOVERY_WAKEUP_TIMEOUT_IN_MILLISECONDS = 5000;
+            int RECOVERY_WAKEUP_TIMEOUT_IN_MILLISECONDS = 1000;
 
             @Override
             public void run() {
@@ -251,21 +289,19 @@ public class UIServer {
             private void retryOrderServerJobs(
                     ArrayList<PygmyJob<String, JSONObject, String>> incompleteJobs) {
                 for (PygmyJob<String, JSONObject, String> job : incompleteJobs) {
-                    if (job.getJobType().equals("BUY")) {
-                        try {
+                    try {
+                        if (job.getJobType().equals("BUY")) {
                             buyBook(job.getParameter(), job.getJobId());
-                        } catch (JSONException | IOException | InterruptedException e) {
-                            e.printStackTrace();
                         }
+                    } catch (JSONException | IOException | InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
-
             }
 
             private void retryCatalogServerJobs(
                     ArrayList<PygmyJob<String, String, String>> incompleteJobs) {
                 for (PygmyJob<String, String, String> job : incompleteJobs) {
-
                     try {
                         if (job.getJobType().equals("LOOKUP_TOPIC")) {
                             // re-attempt the job hopefully on a new server
@@ -279,6 +315,7 @@ public class UIServer {
                     }
                 }
             }
+
         });
 
         jobRecoveryThread.start();
@@ -297,7 +334,7 @@ public class UIServer {
         catalogHeartbeatMonitor.markJobStarted(lookupTopicJob);
 
         String response = HttpRESTUtils.httpGet(catalogServer
-                + "/query/topic/" + topic + "@" + jobId);
+                + "/query/topic/" + topic + "@" + jobId, Config.DEBUG);
 
         if (response != null) {
             catalogHeartbeatMonitor.addResponse(jobId, new JSONObject(response));
@@ -316,7 +353,7 @@ public class UIServer {
         catalogHeartbeatMonitor.markJobStarted(lookupBookJob);
 
         String response = HttpRESTUtils.httpGet(catalogServer
-                + "/query/book/" + bookId + "@" + jobId);
+                + "/query/book/" + bookId + "@" + jobId, Config.DEBUG);
 
         if (response != null) {
             catalogHeartbeatMonitor.addResponse(jobId, new JSONObject(response));
@@ -335,7 +372,7 @@ public class UIServer {
         orderHeartbeatMonitor.markJobStarted(buyJob);
 
         String response = HttpRESTUtils.httpPostJSON(orderServer
-                + "/buy", buyRequest);
+                + "/buy", buyRequest, Config.DEBUG);
 
         if (response != null) {
             orderHeartbeatMonitor.addResponse(jobId, new JSONObject(response));
