@@ -18,12 +18,13 @@ public class HeartbeatMonitor<JobIDType, JobParameterType, LoadBalancerType, Job
 
     private Long JOB_TIMEOUT_IN_MILLISECONDS = (long) 2000;
 
-    public HeartbeatMonitor(RoundRobinLoadBalancer<LoadBalancerType> loadBalancer) {
+    public HeartbeatMonitor(RoundRobinLoadBalancer<LoadBalancerType> loadBalancer, long timeout) {
         this.loadBalancer = loadBalancer;
         requestStartTimeStateMachine = new HashMap<JobIDType, Long>();
         jobMap = new HashMap<JobIDType, PygmyJob<JobIDType, JobParameterType, LoadBalancerType>>();
         responseMap =
                 new HashMap<JobIDType, JobResponseType>();
+        JOB_TIMEOUT_IN_MILLISECONDS = timeout;
     }
 
     public synchronized void markJobStarted(
@@ -40,9 +41,9 @@ public class HeartbeatMonitor<JobIDType, JobParameterType, LoadBalancerType, Job
         }
     }
 
-    public boolean isJobComplete(JobIDType s) {
+    public synchronized boolean isJobComplete(JobIDType s) {
 
-        if (requestStartTimeStateMachine.containsKey(s)) {
+        if (requestStartTimeStateMachine.containsKey(s) || !responseMap.containsKey(s)) {
             return false;
         }
 

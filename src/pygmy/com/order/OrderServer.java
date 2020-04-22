@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import config.Config;
 import pygmy.com.scheduler.HeartbeatMonitor;
+import pygmy.com.scheduler.PygmyJob;
 import pygmy.com.scheduler.RoundRobinLoadBalancer;
 import pygmy.com.ui.UIServer;
 import pygmy.com.utils.HttpRESTUtils;
@@ -23,13 +24,11 @@ import pygmy.com.wal.OrderWriteAheadLogger;
 
 public class OrderServer {
 
-    private static String catalogServerURL;
-
     // load balancers
     private static RoundRobinLoadBalancer<String> catalogLoadBalancer = null;
 
     // heart-beat monitors
-    private static HeartbeatMonitor<String, String, String, JSONObject> catalogHeartbeatMonitor =
+    private static HeartbeatMonitor<String, JSONObject, String, JSONObject> catalogHeartbeatMonitor =
             null;
 
     private static String uiIpAddress, ipAddress;
@@ -61,12 +60,14 @@ public class OrderServer {
         // set up load-balancer and the heartbeat-monitor
         catalogLoadBalancer = new RoundRobinLoadBalancer<String>(5);
         catalogHeartbeatMonitor =
-                new HeartbeatMonitor<String, String, String, JSONObject>(catalogLoadBalancer);
+                new HeartbeatMonitor<String, JSONObject, String, JSONObject>(catalogLoadBalancer,
+                        2000);
 
         // expose the endpoints
 
         // query-by-topic
         post("/buy", (req, res) -> {
+            res.type("application/json");
 
             long entryTS = System.currentTimeMillis();
 
@@ -75,46 +76,34 @@ public class OrderServer {
             int updateBy = updateRequest.getInt("updateBy");
             String orderId = updateRequest.getString("orderId");
 
+            // add reply-to url (i.e. own url) so that the catalog-server can ACK
+            updateRequest.put("reply-to", ipAddress);
+
             // add OrderServer timestamp
             long timeStamp = System.currentTimeMillis();
 
-            System.out.println(
-                    getTime() + "Querying CatalogServer for book: " + bookId);
+            String jobId = orderId.substring(1);
+            updateBook(updateRequest, jobId);
 
-            JSONObject queryResponse = new JSONObject(
-                    HttpRESTUtils.httpGet(catalogServerURL + "/query/book/" + bookId,
-                            Config.DEBUG));
+            // spin until the request is processed
+            while (!catalogHeartbeatMonitor.isJobComplete(jobId)) {
+                // check again after a second
+                Thread.sleep(1000);
+            }
 
-            res.type("application/json");
-            JSONObject updateResponse = null;
+            Thread.sleep(100);
+            JSONObject updateResponse = catalogHeartbeatMonitor.getResponse(jobId);
+            catalogHeartbeatMonitor.cleanupJob(jobId);
 
-            if (queryResponse.optInt("Stock", Integer.MIN_VALUE) + updateBy >= 0) {
-
-                System.out.println(
-                        getTime() + "Asking CatalogServer to update count of book: " + bookId);
-
-                // enough items in stock; proceed to buy
-                updateResponse = new JSONObject(HttpRESTUtils
-                        .httpPostJSON(catalogServerURL + "/update", updateRequest, Config.DEBUG));
-
-                // check if update was successful
-                if (updateResponse.getInt("Stock") >= 0) {
-                    updateResponse.put("code", 0);
-                    updateResponse.put("OrderStatus",
-                            "Order approved by OrderServer.");
-                } else {
-                    updateResponse.put("code", -1);
-                    updateResponse.put("OrderStatus",
-                            "Order rejected by CatalogServer.");
-                }
-            } else {
-                // /query shows that we don't have enough items in stock
-                // don't proceed with /update
-                updateResponse = new JSONObject();
-                updateResponse.put("code", -1);
-                updateResponse.put("bookId", bookId);
+            // check if update was successful
+            if (updateResponse.getInt("Stock") >= 0) {
+                updateResponse.put("code", 0);
                 updateResponse.put("OrderStatus",
-                        "Order rejected by OrderServer.");
+                        "Order approved by OrderServer.");
+            } else {
+                updateResponse.put("code", -1);
+                updateResponse.put("OrderStatus",
+                        "Order rejected by CatalogServer.");
             }
 
             // add the OrderServer timestamp & the orderId to the response packet
@@ -131,7 +120,24 @@ public class OrderServer {
             delayWriter.newLine();
             delayWriter.flush();
 
+            System.out.println(getTime() + "ACKing jobId: " + jobId);
+            Thread ackThread = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    HttpRESTUtils.httpPost(uiIpAddress + "/order/ack/" + jobId, Config.DEBUG);
+                }
+            });
+            ackThread.start();
+
             return updateResponse;
+        });
+
+        // REST end-point for catalog-server to mark a Job as completed
+        post("/catalog/ack/:jobId", (req, res) -> {
+            String jobId = req.params(":jobId");
+            catalogHeartbeatMonitor.markJobCompleted(jobId);
+            return UIServer.getDummyJSONObject();
         });
 
         // REST end-point for ui-server to add catalog-server to the load-balancer
@@ -150,6 +156,29 @@ public class OrderServer {
         // introduce self to the front-end server
         introduceSelfToUIServer();
 
+    }
+
+    public static void updateBook(JSONObject updateRequest, String jobId)
+            throws InterruptedException {
+
+        // tell the heart-beat monitor to track this job
+        String catalogServer = catalogLoadBalancer.get();
+        PygmyJob<String, JSONObject, String> updateJob =
+                new PygmyJob<String, JSONObject, String>(jobId, "UPDATE", catalogServer,
+                        updateRequest);
+
+        catalogHeartbeatMonitor.markJobStarted(updateJob);
+
+        System.out.println(
+                getTime() + "Asking CatalogServer to update count of book: "
+                        + updateRequest.getString("bookId"));
+
+        String updateResponse =
+                HttpRESTUtils.httpPostJSON(catalogServer + "/update", updateRequest, Config.DEBUG);
+
+        if (updateResponse != null) {
+            catalogHeartbeatMonitor.addResponse(jobId, new JSONObject(updateResponse));
+        }
     }
 
     private static void introduceSelfToUIServer() throws ConnectException, IOException {

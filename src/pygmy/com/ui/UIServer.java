@@ -62,9 +62,10 @@ public class UIServer {
         orderLoadBalancer = new RoundRobinLoadBalancer<String>(5);
 
         catalogHeartbeatMonitor =
-                new HeartbeatMonitor<String, String, String, JSONObject>(catalogLoadBalancer);
+                new HeartbeatMonitor<String, String, String, JSONObject>(catalogLoadBalancer, 2000);
         orderHeartbeatMonitor =
-                new HeartbeatMonitor<String, JSONObject, String, JSONObject>(orderLoadBalancer);
+                new HeartbeatMonitor<String, JSONObject, String, JSONObject>(orderLoadBalancer,
+                        5000);
 
         // start listening on pre-configured port
         port(Integer.parseInt(Config.UI_SERVER_PORT));
@@ -96,7 +97,7 @@ public class UIServer {
         });
 
         // invalidate endpoint to remove an entry from the cache
-        delete("/invalidate/:bookId", (req, res) -> {
+        post("/invalidate/:bookId", (req, res) -> {
             String bookId = req.params(":bookId");
             return cacheManager.invalidateBookLookupCache(bookId);
         });
@@ -121,16 +122,18 @@ public class UIServer {
                     entryTS + "-" + Thread.currentThread().getId();
             buyRequest.put("orderId", orderId);
 
-            buyBook(buyRequest, orderId);
+            String jobId = orderId.substring(1);
+            buyBook(buyRequest, jobId);
 
             // spin until the request is processed
-            while (!orderHeartbeatMonitor.isJobComplete(orderId)) {
+            while (!orderHeartbeatMonitor.isJobComplete(jobId)) {
                 // check again after a second
                 Thread.sleep(1000);
             }
 
-            JSONObject buyResponse = new JSONObject(orderHeartbeatMonitor.getResponse(orderId));
-            orderHeartbeatMonitor.cleanupJob(orderId);
+            Thread.sleep(100);
+            JSONObject buyResponse = orderHeartbeatMonitor.getResponse(jobId);
+            orderHeartbeatMonitor.cleanupJob(jobId);
 
             if (buyResponse.getInt("code") == 0) {
                 buyResponse.put("Status", "Successfully bought the book(s)!");
@@ -158,9 +161,6 @@ public class UIServer {
             String bookId = buyRequest.getString("bookId");
             int toBuy = buyRequest.getInt("count");
 
-            System.out.println(getTime() +
-                    "Asking OrderServer to buy book: " + bookId);
-
             // create a JSON request to send to OrderServer
             buyRequest.put("updateBy", -1 * toBuy);
             buyRequest.remove("count");
@@ -174,16 +174,18 @@ public class UIServer {
             System.out.println(getTime() +
                     "Asking OrderServer to buy book: " + bookId);
 
-            buyBook(buyRequest, orderId);
+            String jobId = orderId.substring(1);
+            buyBook(buyRequest, jobId);
 
             // spin until the request is processed
-            while (!orderHeartbeatMonitor.isJobComplete(orderId)) {
+            while (!orderHeartbeatMonitor.isJobComplete(jobId)) {
                 // check again after a second
                 Thread.sleep(1000);
             }
 
-            JSONObject buyResponse = new JSONObject(orderHeartbeatMonitor.getResponse(orderId));
-            orderHeartbeatMonitor.cleanupJob(orderId);
+            Thread.sleep(100);
+            JSONObject buyResponse = orderHeartbeatMonitor.getResponse(jobId);
+            orderHeartbeatMonitor.cleanupJob(jobId);
 
             if (buyResponse.getInt("code") == 0) {
                 buyResponse.put("Status", "Successfully bought the book(s)!");
@@ -216,9 +218,6 @@ public class UIServer {
             orderHeartbeatMonitor.markJobCompleted(jobId);
             return getDummyJSONObject();
         });
-
-        // catalogLoadBalancer.add("http://128.119.243.175:35640");
-        // catalogLoadBalancer.add("http://128.119.243.147:35640");
 
         // REST end-point for catalog-server to add itself to the load-balancer
         post("/catalog/add", (req, res) -> {

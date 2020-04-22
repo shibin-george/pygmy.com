@@ -181,6 +181,24 @@ public class CatalogServer {
             delayWriter.write(entryTS + "-" + exitTS);
             delayWriter.newLine();
             delayWriter.flush();
+
+            System.out.println(
+                    getTime() + "ACKing jobId: " + orderId.substring(1) + jsonObject.toString(4));
+            Thread ackThread = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    HttpRESTUtils.httpPost(
+                            uiIpAddress + "/invalidate/" + bookId,
+                            Config.DEBUG);
+                    HttpRESTUtils.httpPost(
+                            updateRequest.getString("reply-to") + "/catalog/ack/"
+                                    + orderId.substring(1),
+                            Config.DEBUG);
+                }
+            });
+            ackThread.start();
+
             return jsonObject;
         });
 
@@ -215,7 +233,8 @@ public class CatalogServer {
                 while (true) {
                     try {
                         JSONObject response = new JSONObject(
-                                HttpRESTUtils.httpPostJSON(uiIpAddress + "/catalog/add", request, Config.DEBUG));
+                                HttpRESTUtils.httpPostJSON(uiIpAddress + "/catalog/add", request,
+                                        Config.DEBUG));
 
                         // check if we have the lock
                         if (response.optString("token", "false").equals("true")) {
