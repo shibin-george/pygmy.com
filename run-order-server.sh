@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [[ ${@: -1} == "clean" ]]
 then
     # kill all running catalog instances

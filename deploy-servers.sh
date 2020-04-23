@@ -1,3 +1,5 @@
+#!/bin/bash
+
 UI_SERVER="elnux3.cs.umass.edu"
 CATALOG_SERVER1="elnux7.cs.umass.edu"
 CATALOG_SERVER2="elnux1.cs.umass.edu"

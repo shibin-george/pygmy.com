@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo -e "\n\n\n===========================================|ATTENTION PLEASE|===========================================\n"
 echo -e "For deploying the lab2 assignment across servers, ssh-key pairs need to be set up.\n\n"
 echo -e "Setting up ssh-key pairs now..."

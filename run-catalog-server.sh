@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [[ ${@: -1} == "clean" ]]
 then
     # kill all running catalog instances
@@ -23,6 +25,12 @@ then
 fi
 
 UI_IP=$1
+
+if [[ "$2" == "recover" ]]
+then
+    RECOVERY="recovery"
+fi
+
 INDEX=${@:(-1)}
 
 CP=$(find lib/ -iname "*.jar" -exec readlink -f {} \; | tr '\n' ':')
@@ -33,4 +41,4 @@ CATALOG_WAL="$PWD/CatalogServer$INDEX.WAL"
 CATALOG_OUTPUT="$PWD/catalog-server$INDEX.out"
 
 cd bin/
-java -cp $CP:. pygmy.com.catalog.CatalogServer $INITDB $CATALOG_WAL $UI_IP pygmy/com/catalog/CatalogServer.class > $CATALOG_OUTPUT 2>&1 &
+java -cp $CP:. pygmy.com.catalog.CatalogServer $INITDB $CATALOG_WAL $UI_IP $RECOVERY pygmy/com/catalog/CatalogServer.class> $CATALOG_OUTPUT 2>&1 &
