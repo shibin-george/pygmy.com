@@ -280,6 +280,10 @@ public class CatalogServer {
             catalogDb.prettyPrintCatalog();
             System.out.println("Recovered faulty replica server..");
 
+            // since we recovered the faulty replica server,
+            // we acquire the lock
+            lockManager.setLockToAcquired();
+
             Thread.sleep(2000);
 
             return UIServer.getDummyJSONObject();
