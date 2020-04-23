@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javassist.compiler.ast.StringL;
 import pygmy.com.wal.CatalogWriteAheadLogger;
 
 public class CatalogDatabase {
@@ -144,6 +145,42 @@ public class CatalogDatabase {
             }
 
             return Integer.MIN_VALUE + "_" + timestamp;
+        }
+    }
+
+    public void replayFromWAL(String walFile) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(walFile));
+            String line = null;
+
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(":");
+                String action = parts[0];
+                switch (action) {
+
+                case "INITDB":
+                    init(parts[1]); // init the DB
+                    break;
+
+                case "UPDATE":
+                    String bookId = parts[1];
+                    int updateBy = Integer.parseInt(parts[2]);
+                    String orderId = parts[4];
+                    updateCountById(bookId, updateBy, orderId);
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void prettyPrintCatalog() {
+        for (Book book : books) {
+            System.out.println(book.JSONifySelf().toString(2));
         }
     }
 

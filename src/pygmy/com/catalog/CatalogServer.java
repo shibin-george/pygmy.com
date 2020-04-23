@@ -42,6 +42,8 @@ public class CatalogServer {
 
     private static HashSet<String> catalogReplicas = null;
 
+    private static boolean helpingInRecovery = false, recoveryInProgress = false;
+
     public static void main(String[] args) throws IOException, InterruptedException {
 
         InetAddress ip = InetAddress.getLocalHost();
@@ -68,10 +70,9 @@ public class CatalogServer {
         // UIServer!
         uiIpAddress = UIServer.prefixHTTP(args[2] + ":" + Config.UI_SERVER_PORT);
 
-        if (args.length >= 4 && args[3].equals("recovery")) {
-            // we need to start in recovery mode since we crashed in previous run
-            // resync
-        }
+        boolean needRecovery = false;
+        if (args.length >= 4 && args[3].equals("recovery"))
+            needRecovery = true;
 
         // set up lock-manager for the token-ring distributed
         // mutual exclusion algorithm
@@ -83,7 +84,7 @@ public class CatalogServer {
         // set containing the replicas of catalog-server
         catalogReplicas = new HashSet<String>();
 
-        if (!catalogDb.init(initialInventoryPath)) {
+        if (!needRecovery && !catalogDb.init(initialInventoryPath)) {
             System.out.println(getTime() + "INIT of DB from on-disk file failed! Exiting..");
             System.exit(1);
         }
@@ -178,12 +179,16 @@ public class CatalogServer {
             Thread.sleep(100);
             JSONObject response = updateTaskQueue.getResponse(orderId);
 
-            long exitTS = System.currentTimeMillis();
+            long exitTS = System
+                    .currentTimeMillis();
             delayWriter.write(entryTS + "-" + exitTS);
             delayWriter.newLine();
             delayWriter.flush();
 
+            boolean replyTo = !updateRequest.optString("reply-to", "none").equals("none");
+
             System.out.println(
+
                     getTime() + "ACKing jobId: " + orderId.substring(1));
             Thread ackThread = new Thread(new Runnable() {
 
@@ -192,10 +197,11 @@ public class CatalogServer {
                     HttpRESTUtils.httpPost(
                             uiIpAddress + "/invalidate/" + bookId,
                             Config.DEBUG);
-                    HttpRESTUtils.httpPost(
-                            updateRequest.getString("reply-to") + "/catalog/ack/"
-                                    + orderId.substring(1),
-                            Config.DEBUG);
+                    if (replyTo)
+                        HttpRESTUtils.httpPost(
+                                updateRequest.getString("reply-to") + "/catalog/ack/"
+                                        + orderId.substring(1),
+                                Config.DEBUG);
                 }
             });
             ackThread.start();
@@ -244,11 +250,75 @@ public class CatalogServer {
             return UIServer.getDummyJSONObject();
         });
 
+        // REST end-point for initiating recovery
+        // query-by-topic
+        get("/recovery/initiate", (req, res) -> {
+            res.type("application/json");
+
+            // set state to helpingInRecovery so that no tasks
+            // are executed at this time
+            helpingInRecovery = true;
+
+            JSONObject recoveryResponse = new JSONObject();
+            recoveryResponse.put("WAL", args[1]);
+
+            return recoveryResponse;
+        });
+
+        // REST end-point for initiating recovery
+        // query-by-topic
+        get("/recovery/complete", (req, res) -> {
+            res.type("application/json");
+
+            // release the lock so that no orders can be executed while
+            // another replica is being recovered from failure
+            helpingInRecovery = false;
+
+            catalogDb.prettyPrintCatalog();
+            System.out.println("Recovered faulty replica..");
+
+            Thread.sleep(2000);
+
+            return UIServer.getDummyJSONObject();
+        });
+
         Thread.sleep(1000);
 
-        // now that everything is done (including possibly recovery),
         // introduce self to the front-end server
         introduceSelfToUIServer();
+
+        // check if we need to recover from a previous failure
+        if (needRecovery) {
+            // we need to start in recovery mode since we crashed in previous run
+            // resync!
+            String otherReplica = null;
+            while ((otherReplica = getOtherServer()) == null) {
+                Thread.sleep(1000);
+            }
+
+            JSONObject recoveryResponse =
+                    new JSONObject(HttpRESTUtils.httpGet(otherReplica + "/recovery/initiate",
+                            Config.DEBUG));
+
+            if (recoveryResponse.optString("WAL", "none").equals("none")) {
+                // the other replica ditched us or probably crashed
+                // ABORT
+                System.out.println("Exiting since recovery is not possible");
+                System.exit(1);
+            }
+
+            catalogDb.replayFromWAL(recoveryResponse.optString("WAL"));
+
+            catalogDb.prettyPrintCatalog();
+
+            // now that recovery is complete, convey the same to the other replica
+            HttpRESTUtils.httpGet(otherReplica + "/recovery/complete", Config.DEBUG);
+
+            System.out.println("Recovery complete..");
+
+            // release the lock just to be sure
+            lockManager.setLockToReleased();
+        }
 
         // start executor thread
         startExecutorThread();
@@ -266,7 +336,9 @@ public class CatalogServer {
             public void run() {
                 while (true) {
                     // check if we have the lock
-                    if (lockManager.isLockAcquired()) {
+                    // if we are not helping another replica in recovery process,
+                    // we can execute tasks
+                    if (lockManager.isLockAcquired() && !helpingInRecovery) {
                         int jobsDone = 0;
                         while (jobsDone < 1) {
                             SimpleEntry<String, JSONObject> task = updateTaskQueue.getTask();
@@ -300,7 +372,7 @@ public class CatalogServer {
                                     + replicaServer + "..");
                             lockManager.setLockToReleased();
                         }
-                    } else {
+                    } else if (!lockManager.isLockAcquired()) {
                         // we don't have the lock yet
                         // check if it has been too long since we last had the lock
                         // also check if we have pending tasks

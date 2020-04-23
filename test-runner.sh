@@ -1,6 +1,5 @@
 UI_IP="128.119.243.168"
-CATALOG_IP="128.119.243.147"
-ORDER_IP="128.119.243.175"
+CATALOG_IP="128.119.243.175"
 
 # set classpath
 CP=$(find lib/ -iname "*.jar" -exec readlink -f {} \; | tr '\n' ':')

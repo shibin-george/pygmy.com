@@ -9,9 +9,11 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import config.Config;
@@ -155,6 +157,42 @@ public class OrderServer {
         // now that everything is done (including possibly recovery),
         // introduce self to the front-end server
         introduceSelfToUIServer();
+
+        Thread jobRecoveryThread = new Thread(new Runnable() {
+
+            int RECOVERY_WAKEUP_TIMEOUT_IN_MILLISECONDS = 1000;
+
+            @Override
+            public void run() {
+                while (true) {
+                    retryCatalogServerJobs(catalogHeartbeatMonitor.getIncompleteJobs());
+
+                    try {
+                        Thread.sleep(RECOVERY_WAKEUP_TIMEOUT_IN_MILLISECONDS);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            private void retryCatalogServerJobs(
+                    ArrayList<PygmyJob<String, JSONObject, String>> incompleteJobs) {
+                for (PygmyJob<String, JSONObject, String> job : incompleteJobs) {
+                    try {
+                        if (job.getJobType().equals("UPDATE")) {
+                            // re-attempt the job hopefully on a new server
+                            updateBook(job.getParameter(), job.getJobId());
+                        }
+                    } catch (JSONException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        });
+
+        jobRecoveryThread.start();
 
     }
 
