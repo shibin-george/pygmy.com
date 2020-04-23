@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javassist.compiler.ast.StringL;
 import pygmy.com.wal.CatalogWriteAheadLogger;
 
 public class CatalogDatabase {

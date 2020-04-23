@@ -42,7 +42,7 @@ public class CatalogServer {
 
     private static HashSet<String> catalogReplicas = null;
 
-    private static boolean helpingInRecovery = false, recoveryInProgress = false;
+    private static boolean helpingInRecovery = false;
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -227,7 +227,9 @@ public class CatalogServer {
             lockManager.setLockToAcquired();
             JSONObject response = new JSONObject();
             response.put("token", "acquired");
-            System.out.println(getTime() + "Acquired token!");
+
+            if (Config.DEBUG_LOCK)
+                System.out.println(getTime() + "Acquired token from replica server!");
 
             return response;
         });
@@ -251,7 +253,6 @@ public class CatalogServer {
         });
 
         // REST end-point for initiating recovery
-        // query-by-topic
         get("/recovery/initiate", (req, res) -> {
             res.type("application/json");
 
@@ -259,13 +260,15 @@ public class CatalogServer {
             // are executed at this time
             helpingInRecovery = true;
 
+            System.out.println("Initiating recovery of faulty replica server..");
+
             JSONObject recoveryResponse = new JSONObject();
             recoveryResponse.put("WAL", args[1]);
 
             return recoveryResponse;
         });
 
-        // REST end-point for initiating recovery
+        // REST end-point for completing recovery
         // query-by-topic
         get("/recovery/complete", (req, res) -> {
             res.type("application/json");
@@ -275,9 +278,18 @@ public class CatalogServer {
             helpingInRecovery = false;
 
             catalogDb.prettyPrintCatalog();
-            System.out.println("Recovered faulty replica..");
+            System.out.println("Recovered faulty replica server..");
 
             Thread.sleep(2000);
+
+            return UIServer.getDummyJSONObject();
+        });
+
+        // REST end-point for heartbeat
+        get("/heartbeat", (req, res) -> {
+            res.type("application/json");
+
+            // System.out.println("HeartBeat from replica server..");
 
             return UIServer.getDummyJSONObject();
         });
@@ -319,9 +331,6 @@ public class CatalogServer {
             HttpRESTUtils.httpGet(otherReplica + "/recovery/complete", Config.DEBUG);
 
             System.out.println("Recovery complete..");
-
-            // release the lock just to be sure
-            lockManager.setLockToReleased();
         }
 
         // start executor thread
@@ -343,6 +352,7 @@ public class CatalogServer {
                     // if we are not helping another replica in recovery process,
                     // we can execute tasks
                     if (lockManager.isLockAcquired() && !helpingInRecovery) {
+                        // System.out.println("have lock");
                         int jobsDone = 0;
                         while (jobsDone < 1) {
                             SimpleEntry<String, JSONObject> task = updateTaskQueue.getTask();
@@ -369,14 +379,15 @@ public class CatalogServer {
                             jobsDone++;
                         }
 
-                        // done with a batch update, now release the lock
+                        // done with updates, now release the lock
                         String replicaServer = getOtherServer();
                         if (replicaServer != null && transferToken(replicaServer)) {
-                            System.out.println(getTime() + "Token released to replica server: "
-                                    + replicaServer + "..");
-                            lockManager.setLockToReleased();
+                            if (Config.DEBUG_LOCK)
+                                System.out.println(getTime() + "Token released to replica server: "
+                                        + replicaServer + "..");
                         }
                     } else if (!lockManager.isLockAcquired()) {
+                        // System.out.println("no lock");
                         // we don't have the lock yet
                         // check if it has been too long since we last had the lock
                         // also check if we have pending tasks
@@ -384,13 +395,19 @@ public class CatalogServer {
                                 updateTaskQueue.hasPendingTasks()) {
                             // check if the replica is up and running
                             String replicaServer = getOtherServer();
-                            if (replicaServer != null && transferToken(replicaServer)) {
+                            if (replicaServer != null && isAlive(replicaServer)) {
                                 // ok! the replica is up and running.
                                 // we will wait for some more time
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             } else {
                                 // hmmmm.. looks like no other server
                                 // take over the lock
-                                System.out.println(getTime() + "Forcibly acquiring the token..");
+                                System.out.println(getTime()
+                                        + "Forcibly acquiring the token since replica server seems to be down..");
                                 lockManager.setLockToAcquired();
                             }
                         }
@@ -403,8 +420,23 @@ public class CatalogServer {
         executorThread.start();
     }
 
+    private static boolean isAlive(String replicaServer) {
+        String response = HttpRESTUtils.httpGet(replicaServer + "/heartbeat", Config.DEBUG);
+
+        if (response == null)
+            return false;
+
+        return true;
+    }
+
     private static boolean transferToken(String replicaServer) {
-        String response = HttpRESTUtils.httpPost(replicaServer + "/lock", Config.DEBUG);
+
+        // first, set the state to release
+        lockManager.setLockToReleased();
+
+        // now, we transfer the token
+        String response =
+                HttpRESTUtils.httpPost(replicaServer + "/lock", Config.DEBUG);
 
         if (response == null)
             return false;
@@ -472,6 +504,7 @@ public class CatalogServer {
 
                         // check if we have the lock
                         if (response.optString("token", "false").equals("true")) {
+                            System.out.println(getTime() + "Got token from the UIServer!");
                             lockManager.setLockToAcquired();
                         }
 
