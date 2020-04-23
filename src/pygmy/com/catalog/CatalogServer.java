@@ -400,12 +400,15 @@ public class CatalogServer {
     }
 
     private static boolean transferToken(String replicaServer) {
-        JSONObject lockResponse =
-                new JSONObject(HttpRESTUtils.httpPost(replicaServer + "/lock", Config.DEBUG));
+        String response = HttpRESTUtils.httpPost(replicaServer + "/lock", Config.DEBUG);
+
+        if (response == null)
+            return false;
+
+        JSONObject lockResponse = new JSONObject(response);
 
         // check if they have the lock
-        if (lockResponse != null &&
-                lockResponse.optString("token", "false").equals("acquired")) {
+        if (lockResponse.optString("token", "false").equals("acquired")) {
             return true;
         }
 
