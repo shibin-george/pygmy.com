@@ -10,8 +10,10 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import org.json.JSONArray;
@@ -19,6 +21,7 @@ import org.json.JSONObject;
 
 import config.Config;
 import pygmy.com.mutex.MutualExclusionLockManager;
+import pygmy.com.mutex.TaskQueue;
 import pygmy.com.ui.UIServer;
 import pygmy.com.utils.HttpRESTUtils;
 import pygmy.com.wal.CatalogWriteAheadLogger;
@@ -32,6 +35,12 @@ public class CatalogServer {
     private static String ipAddress;
 
     private static MutualExclusionLockManager lockManager = null;
+    private static TaskQueue<String, JSONObject, JSONObject> updateTaskQueue = null;
+    private static Thread executorThread;
+
+    private static int MAX_JOBS_IN_QUEUE = 5;
+
+    private static HashSet<String> catalogReplicas = null;
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -66,7 +75,13 @@ public class CatalogServer {
 
         // set up lock-manager for the token-ring distributed
         // mutual exclusion algorithm
-        lockManager = new MutualExclusionLockManager();
+        lockManager = new MutualExclusionLockManager(1000/* milliseconds */);
+
+        // set up task-queue for update-tasks
+        updateTaskQueue = new TaskQueue<String, JSONObject, JSONObject>(MAX_JOBS_IN_QUEUE);
+
+        // set containing the replicas of catalog-server
+        catalogReplicas = new HashSet<String>();
 
         if (!catalogDb.init(initialInventoryPath)) {
             System.out.println(getTime() + "INIT of DB from on-disk file failed! Exiting..");
@@ -150,32 +165,18 @@ public class CatalogServer {
 
             JSONObject updateRequest = new JSONObject(req.body());
             String bookId = updateRequest.getString("bookId");
-            int updateBy = updateRequest.getInt("updateBy");
 
             // some updates may not have order-id tagged if not made via ui-server
             String orderId = updateRequest.optString("orderId", "DEFAULT");
 
-            // try to update the database in a thread-safe manner
-            String signature = catalogDb.updateCountById(bookId, updateBy, orderId);
+            updateTaskQueue.addTask(orderId, updateRequest);
 
-            String[] split = signature.split("_");
-            int newCount = Integer.parseInt(split[0]);
-            long timestamp = Long.parseLong(split[1]);
+            while (!updateTaskQueue.isTaskComplete(orderId)) {
+                Thread.sleep(1000);
+            }
 
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("bookId", bookId);
-            jsonObject.put("Stock", newCount);
-            jsonObject.put("CatalogServerTimeStamp", timestamp);
-
-            if (timestamp == Long.MIN_VALUE) {
-                jsonObject.put("CatalogStatus", "Write to WAL failed.");
-                jsonObject.put("CatalogServerTimeStamp", System.currentTimeMillis());
-            } else if (newCount == Integer.MIN_VALUE)
-                jsonObject.put("CatalogStatus", "This item doesn't exist in the inventory.");
-            else if (newCount >= 0)
-                jsonObject.put("CatalogStatus", "Order approved by CatalogServer.");
-            else
-                jsonObject.put("CatalogStatus", "Not enough items in stock.");
+            Thread.sleep(100);
+            JSONObject response = updateTaskQueue.getResponse(orderId);
 
             long exitTS = System.currentTimeMillis();
             delayWriter.write(entryTS + "-" + exitTS);
@@ -183,7 +184,7 @@ public class CatalogServer {
             delayWriter.flush();
 
             System.out.println(
-                    getTime() + "ACKing jobId: " + orderId.substring(1) + jsonObject.toString(4));
+                    getTime() + "ACKing jobId: " + orderId.substring(1));
             Thread ackThread = new Thread(new Runnable() {
 
                 @Override
@@ -199,7 +200,30 @@ public class CatalogServer {
             });
             ackThread.start();
 
-            return jsonObject;
+            return response;
+        });
+
+        // REST endpoint for replication
+        post("/replicate", (req, res) -> {
+            res.type("application/json");
+
+            JSONObject replicateRequest = new JSONObject(req.body());
+
+            String orderId = replicateRequest.optString("orderId", "DEFAULT");
+            System.out.println(getTime() + "Replicating order: " + orderId + "..");
+            return updateBook(orderId, replicateRequest);
+        });
+
+        // REST endpoint for acquiring token/lock
+        post("/lock", (req, res) -> {
+            res.type("application/json");
+
+            lockManager.setLockToAcquired();
+            JSONObject response = new JSONObject();
+            response.put("token", "acquired");
+            System.out.println(getTime() + "Acquired token!");
+
+            return response;
         });
 
         // REST end-point for order-server to add itself to the load-balancer
@@ -208,10 +232,15 @@ public class CatalogServer {
 
             Iterator<String> keys = jsonObject.keys();
 
+            HashSet<String> replicas = new HashSet<String>();
+
             while (keys.hasNext()) {
                 String key = keys.next();
+                // System.out.println(key + " : " + jsonObject.getInt(key));
+                replicas.add(key);
             }
 
+            setReplicas(replicas);
             return UIServer.getDummyJSONObject();
         });
 
@@ -220,6 +249,132 @@ public class CatalogServer {
         // now that everything is done (including possibly recovery),
         // introduce self to the front-end server
         introduceSelfToUIServer();
+
+        // start executor thread
+        startExecutorThread();
+    }
+
+    private static synchronized void setReplicas(HashSet<String> replicas) {
+        catalogReplicas.clear();
+        catalogReplicas.addAll(replicas);
+    }
+
+    private static void startExecutorThread() {
+        executorThread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                while (true) {
+                    // check if we have the lock
+                    if (lockManager.isLockAcquired()) {
+                        int jobsDone = 0;
+                        while (jobsDone < 1) {
+                            SimpleEntry<String, JSONObject> task = updateTaskQueue.getTask();
+                            if (task == null) {
+                                // no more tasks in queue
+                                break;
+                            }
+
+                            System.out.println(getTime() + "Executing task: " + task.getKey());
+
+                            String replicaServer = getOtherServer();
+                            if (replicaServer != null) {
+                                // replicate this update on the replica-server
+                                HttpRESTUtils.httpPostJSON(replicaServer + "/replicate",
+                                        task.getValue(), Config.DEBUG);
+
+                                System.out.println(getTime() + "Replicated order: " + task.getKey()
+                                        + " on replica server..");
+                            }
+
+                            JSONObject response = updateBook(task.getKey(), task.getValue());
+                            updateTaskQueue.addResponse(task.getKey(), response);
+                            updateTaskQueue.markTaskComplete(task.getKey());
+                            jobsDone++;
+                        }
+
+                        // done with a batch update, now release the lock
+                        String replicaServer = getOtherServer();
+                        if (replicaServer != null && transferToken(replicaServer)) {
+                            System.out.println(getTime() + "Token released to replica server: "
+                                    + replicaServer + "..");
+                            lockManager.setLockToReleased();
+                        }
+                    } else {
+                        // we don't have the lock yet
+                        // check if it has been too long since we last had the lock
+                        // also check if we have pending tasks
+                        if (lockManager.hasBeenTooLongSinceRelease() &&
+                                updateTaskQueue.hasPendingTasks()) {
+                            // check if the replica is up and running
+                            String replicaServer = getOtherServer();
+                            if (replicaServer != null && transferToken(replicaServer)) {
+                                // ok! the replica is up and running.
+                                // we will wait for some more time
+                            } else {
+                                // hmmmm.. looks like no other server
+                                // take over the lock
+                                System.out.println(getTime() + "Forcibly acquiring the token..");
+                                lockManager.setLockToAcquired();
+                            }
+                        }
+                    }
+                }
+            }
+
+        });
+
+        executorThread.start();
+    }
+
+    private static boolean transferToken(String replicaServer) {
+        JSONObject lockResponse =
+                new JSONObject(HttpRESTUtils.httpPost(replicaServer + "/lock", Config.DEBUG));
+
+        // check if they have the lock
+        if (lockResponse != null &&
+                lockResponse.optString("token", "false").equals("acquired")) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static synchronized String getOtherServer() {
+        for (String server : catalogReplicas) {
+            if (!server.equals(ipAddress))
+                return server;
+        }
+        return null;
+    }
+
+    private static JSONObject updateBook(String orderId, JSONObject updateRequest) {
+        String bookId = updateRequest.getString("bookId");
+        int updateBy = updateRequest.getInt("updateBy");
+
+        // try to update the database in a thread-safe manner
+        String signature = catalogDb.updateCountById(bookId, updateBy, orderId);
+
+        String[] split = signature.split("_");
+        int newCount = Integer.parseInt(split[0]);
+        long timestamp = Long.parseLong(split[1]);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("bookId", bookId);
+        jsonObject.put("Stock", newCount);
+        jsonObject.put("CatalogServerTimeStamp", timestamp);
+
+        if (timestamp == Long.MIN_VALUE) {
+            jsonObject.put("CatalogStatus", "Write to WAL failed.");
+            jsonObject.put("CatalogServerTimeStamp", System.currentTimeMillis());
+        } else if (newCount == Integer.MIN_VALUE)
+            jsonObject.put("CatalogStatus", "This item doesn't exist in the inventory.");
+        else if (newCount >= 0)
+            jsonObject.put("CatalogStatus", "Order approved by CatalogServer.");
+        else
+            jsonObject.put("CatalogStatus", "Not enough items in stock.");
+
+        return jsonObject;
     }
 
     private static void introduceSelfToUIServer() throws ConnectException, IOException {

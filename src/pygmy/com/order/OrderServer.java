@@ -61,7 +61,7 @@ public class OrderServer {
         catalogLoadBalancer = new RoundRobinLoadBalancer<String>(5);
         catalogHeartbeatMonitor =
                 new HeartbeatMonitor<String, JSONObject, String, JSONObject>(catalogLoadBalancer,
-                        2000);
+                        7000);
 
         // expose the endpoints
 

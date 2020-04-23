@@ -1,6 +1,5 @@
 package pygmy.com.ui;
 
-import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
@@ -65,7 +64,7 @@ public class UIServer {
                 new HeartbeatMonitor<String, String, String, JSONObject>(catalogLoadBalancer, 2000);
         orderHeartbeatMonitor =
                 new HeartbeatMonitor<String, JSONObject, String, JSONObject>(orderLoadBalancer,
-                        5000);
+                        10000);
 
         // start listening on pre-configured port
         port(Integer.parseInt(Config.UI_SERVER_PORT));

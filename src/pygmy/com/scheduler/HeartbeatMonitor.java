@@ -42,7 +42,6 @@ public class HeartbeatMonitor<JobIDType, JobParameterType, LoadBalancerType, Job
     }
 
     public synchronized boolean isJobComplete(JobIDType s) {
-
         if (requestStartTimeStateMachine.containsKey(s) || !responseMap.containsKey(s)) {
             return false;
         }
