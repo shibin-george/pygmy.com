@@ -296,10 +296,14 @@ public class CatalogServer {
                 Thread.sleep(1000);
             }
 
-            JSONObject recoveryResponse =
-                    new JSONObject(HttpRESTUtils.httpGet(otherReplica + "/recovery/initiate",
-                            Config.DEBUG));
+            String response = HttpRESTUtils.httpGet(otherReplica + "/recovery/initiate",
+                    Config.DEBUG);
+            if (response == null) {
+                System.out.println("Exiting since recovery is not possible");
+                System.exit(1);
+            }
 
+            JSONObject recoveryResponse = new JSONObject(response);
             if (recoveryResponse.optString("WAL", "none").equals("none")) {
                 // the other replica ditched us or probably crashed
                 // ABORT
