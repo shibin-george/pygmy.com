@@ -87,7 +87,7 @@ public class ConcurrentTests {
         successfulBuys = new int[numThreads];
 
         for (int i = 0; i < numThreads; i++) {
-            numBuyRequests[i] = random.nextInt(1000);
+            numBuyRequests[i] = random.nextInt(10);
             successfulBuys[i] = 0;
             totalBuyRequests += numBuyRequests[i];
         }
