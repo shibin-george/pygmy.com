@@ -3,6 +3,7 @@ package pygmy.com.catalog;
 import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
+import static spark.Spark.threadPool;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -48,7 +49,7 @@ public class CatalogServer {
 
         InetAddress ip = InetAddress.getLocalHost();
         ipAddress = UIServer.prefixHTTP(ip.getHostAddress() + ":" + Config.CATALOG_SERVER_PORT);
-        System.out.println("Catalog Server, running on " + ipAddress + "...");
+        System.out.println(getTime() + "Catalog Server, running on " + ipAddress + "...");
 
         if (args.length < 3) {
             System.out.println(getTime() + "No initial inventory or WAL location or UIServer "
@@ -89,6 +90,8 @@ public class CatalogServer {
             System.exit(1);
         }
 
+        threadPool(10);
+
         // start listening on pre-configured port
         port(Integer.parseInt(Config.CATALOG_SERVER_PORT));
 
@@ -121,6 +124,7 @@ public class CatalogServer {
             });
             ackThread.start();
 
+            jsonObject.put("ServedByCatalogServer", ipAddress);
             return jsonObject;
         });
 
@@ -152,6 +156,7 @@ public class CatalogServer {
             });
             ackThread.start();
 
+            jsonObject.put("ServedByCatalogServer", ipAddress);
             return jsonObject;
         });
 
@@ -187,16 +192,16 @@ public class CatalogServer {
 
             boolean replyTo = !updateRequest.optString("reply-to", "none").equals("none");
 
-            System.out.println(
+            // invalidate cache
+            HttpRESTUtils.httpPost(uiIpAddress + "/invalidate/" + bookId, Config.DEBUG);
 
+            System.out.println(
                     getTime() + "ACKing jobId: " + orderId.substring(1));
+
             Thread ackThread = new Thread(new Runnable() {
 
                 @Override
                 public void run() {
-                    HttpRESTUtils.httpPost(
-                            uiIpAddress + "/invalidate/" + bookId,
-                            Config.DEBUG);
                     if (replyTo)
                         HttpRESTUtils.httpPost(
                                 updateRequest.getString("reply-to") + "/catalog/ack/"
@@ -206,6 +211,7 @@ public class CatalogServer {
             });
             ackThread.start();
 
+            response.put("ServedByCatalogServer", ipAddress);
             return response;
         });
 

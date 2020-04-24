@@ -3,6 +3,7 @@ package pygmy.com.ui;
 import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
+import static spark.Spark.*;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -49,7 +50,7 @@ public class UIServer {
         InetAddress ip = InetAddress.getLocalHost();
         ipAddress = prefixHTTP(ip.getHostAddress() + ":" + Config.UI_SERVER_PORT);
 
-        System.out.println("UI Server, running on " + ipAddress + "...");
+        System.out.println(getTime() + "UI Server, running on " + ipAddress + "...");
 
         if (args.length == 0) {
             System.out
@@ -65,6 +66,8 @@ public class UIServer {
         orderHeartbeatMonitor =
                 new HeartbeatMonitor<String, JSONObject, String, JSONObject>(orderLoadBalancer,
                         20000);
+
+        threadPool(10);
 
         // start listening on pre-configured port
         port(Integer.parseInt(Config.UI_SERVER_PORT));
@@ -241,6 +244,7 @@ public class UIServer {
             }
             introResponse.put("catalog-servers", cServerArray);
             for (String oServer : orderLoadBalancer.getAllServers().keySet()) {
+                System.out.println("Sending cservers to " + oServer);
                 HttpRESTUtils.httpPostJSON(oServer + "/catalog/add", introResponse, Config.DEBUG);
             }
 
@@ -251,6 +255,7 @@ public class UIServer {
                 catalogBroadcast.put(cServer, cServerMap.get(cServer));
             }
             for (String cServer : catalogLoadBalancer.getAllServers().keySet()) {
+                System.out.println("Sending cservers to " + cServer);
                 HttpRESTUtils.httpPostJSON(cServer + "/uibroadcast", catalogBroadcast,
                         Config.DEBUG);
             }

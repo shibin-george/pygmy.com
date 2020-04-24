@@ -2,6 +2,7 @@ package pygmy.com.order;
 
 import static spark.Spark.port;
 import static spark.Spark.post;
+import static spark.Spark.threadPool;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -39,7 +40,7 @@ public class OrderServer {
 
         InetAddress ip = InetAddress.getLocalHost();
         ipAddress = UIServer.prefixHTTP(ip.getHostAddress() + ":" + Config.ORDER_SERVER_PORT);
-        System.out.println("Order Server, running on " + ipAddress + "...");
+        System.out.println(getTime() + "Order Server, running on " + ipAddress + "...");
 
         // the first argument for the order server should be the
         // the URL for the CatalogServer
@@ -50,6 +51,8 @@ public class OrderServer {
         }
 
         uiIpAddress = UIServer.prefixHTTP(args[0] + ":" + Config.UI_SERVER_PORT);
+
+        threadPool(10);
 
         // start listening on pre-configured port
         port(Integer.parseInt(Config.ORDER_SERVER_PORT));
