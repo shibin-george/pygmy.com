@@ -3,6 +3,7 @@ package pygmy.com.scheduler;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -48,7 +49,15 @@ public class RoundRobinLoadBalancer<T> {
     }
 
     public synchronized HashMap<T, Integer> getAllServers() {
-        return serverSet;
+
+        // return a deep copy to prevent ConcurrentModificationException
+
+        HashMap<T, Integer> copy = new HashMap<T, Integer>();
+        for (Entry<T, Integer> entry : serverSet.entrySet()) {
+            copy.put(entry.getKey(), entry.getValue());
+        }
+
+        return copy;
     }
 
     // Used to get time in a readable format for logging
