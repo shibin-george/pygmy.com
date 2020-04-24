@@ -31,7 +31,6 @@ public class ConcurrentTests {
 
     private static class BuyTask implements Runnable {
 
-        String catalogServerURL = "";
         String uiServerURL = "";
         String bookId = "";
 
@@ -46,8 +45,6 @@ public class ConcurrentTests {
             int iter = numBuyRequests[id];
 
             timeStampedEntries.put(id, new ArrayList<SimpleEntry<Long, Integer>>());
-
-            Random random = new Random();
 
             while (iter-- > 0) {
                 JSONObject buyResponse;

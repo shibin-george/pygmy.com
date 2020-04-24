@@ -4,14 +4,12 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class PerfParser {
 
     public static void main(String[] args) {
         long totalDelay = 0;
         int numBuys = 0;
-        ArrayList<Integer> list = new ArrayList<Integer>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(args[0]));
             String line = null;

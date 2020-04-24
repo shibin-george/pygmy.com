@@ -22,7 +22,7 @@ public class ConsecutiveTests {
 
         for (String bookId : bookIds) {
 
-            int numBuyRequests = random.nextInt(20) + 5, numPassed = 0;
+            int numBuyRequests = random.nextInt(10) + 5, numPassed = 0;
 
             System.out.println("Initial stock of: " + bookId);
 
