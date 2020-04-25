@@ -4,6 +4,10 @@ UI_IP="128.119.243.168"
 CATALOG_IP="128.119.243.175"
 ORDER_IP="128.119.243.175"
 
+if [ ! -f bin/test/TestRunner.class ]; then
+    ./compile.sh
+fi
+
 # set classpath
 CP=$(find lib/ -iname "*.jar" -exec readlink -f {} \; | tr '\n' ':')
 
