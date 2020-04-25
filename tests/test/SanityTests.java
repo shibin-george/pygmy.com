@@ -35,7 +35,7 @@ public class SanityTests {
                 HttpRESTUtils.httpGet(uiServerURL + "/search/distributed-systems", Config.DEBUG))
                         .getJSONArray("items");
 
-        assert searchResponse.length() == 2;
+        assert searchResponse.length() == 3;
         System.out.println("/search/distributed-systems fetched correct number of books!");
 
         for (int i = 0; i < searchResponse.length(); i++) {
@@ -53,7 +53,7 @@ public class SanityTests {
                 HttpRESTUtils.httpGet(uiServerURL + "/search/graduate-school", Config.DEBUG))
                         .getJSONArray("items");
 
-        assert searchResponse.length() == 2;
+        assert searchResponse.length() == 4;
         System.out.println("/search/graduate-school fetched correct number of books!");
 
         for (int i = 0; i < searchResponse.length(); i++) {
