@@ -38,7 +38,7 @@ public class SanityTests {
 
         // search for topic: distributed-systems
         JSONArray searchResponse = new JSONObject(
-                HttpRESTUtils.httpGet(uiServerURL + "/search/distributed-systems", Config.DEBUG))
+                HttpRESTUtils.httpGet(uiServerURL + "/search/distributed-systems", 0, Config.DEBUG))
                         .getJSONArray("items");
 
         assert searchResponse.length() == 3;
@@ -56,7 +56,7 @@ public class SanityTests {
 
         // search for topic: distributed-systems
         searchResponse = new JSONObject(
-                HttpRESTUtils.httpGet(uiServerURL + "/search/graduate-school", Config.DEBUG))
+                HttpRESTUtils.httpGet(uiServerURL + "/search/graduate-school", 0, Config.DEBUG))
                         .getJSONArray("items");
 
         assert searchResponse.length() == 4;
@@ -74,7 +74,7 @@ public class SanityTests {
         System.out.println("\nTesting /lookup endpoint..");
         // search for topic: distributed-systems
         JSONObject lookupResponse = new JSONObject(
-                HttpRESTUtils.httpGet(uiServerURL + "/lookup/impstudent", Config.DEBUG));
+                HttpRESTUtils.httpGet(uiServerURL + "/lookup/impstudent", 0, Config.DEBUG));
 
         assert lookupResponse.get("ID").equals("impstudent");
         assert lookupResponse.get("Topic")
@@ -85,7 +85,7 @@ public class SanityTests {
 
         // search for topic: distributed-systems
         lookupResponse = new JSONObject(
-                HttpRESTUtils.httpGet(uiServerURL + "/lookup/xenart177", Config.DEBUG));
+                HttpRESTUtils.httpGet(uiServerURL + "/lookup/xenart177", 0, Config.DEBUG));
 
         assert lookupResponse.get("ID").equals("xenart177");
         assert lookupResponse.get("Topic")
@@ -96,7 +96,7 @@ public class SanityTests {
 
         // search for topic: distributed-systems
         lookupResponse = new JSONObject(
-                HttpRESTUtils.httpGet(uiServerURL + "/lookup/67720min", Config.DEBUG));
+                HttpRESTUtils.httpGet(uiServerURL + "/lookup/67720min", 0, Config.DEBUG));
 
         assert lookupResponse.get("ID").equals("67720min");
         assert lookupResponse.get("Topic")
@@ -107,7 +107,7 @@ public class SanityTests {
 
         // search for topic: distributed-systems
         lookupResponse = new JSONObject(
-                HttpRESTUtils.httpGet(uiServerURL + "/lookup/rpcdummies", Config.DEBUG));
+                HttpRESTUtils.httpGet(uiServerURL + "/lookup/rpcdummies", 0, Config.DEBUG));
 
         assert lookupResponse.get("ID").equals("rpcdummies");
         assert lookupResponse.get("Topic")
@@ -128,7 +128,7 @@ public class SanityTests {
 
             // get the initial count in stock
             JSONObject lookupResponse = new JSONObject(
-                    HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + bookId, Config.DEBUG));
+                    HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + bookId, 0, Config.DEBUG));
 
             int initialStock = lookupResponse.getInt("Stock");
 
@@ -142,7 +142,7 @@ public class SanityTests {
 
             // lookup again
             lookupResponse = new JSONObject(
-                    HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + bookId, Config.DEBUG));
+                    HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + bookId, 0, Config.DEBUG));
 
             assert lookupResponse.getInt("Stock") == initialStock + updateBy;
             System.out.println(
@@ -158,7 +158,7 @@ public class SanityTests {
 
             JSONObject buyResponse = new JSONObject(
                     HttpRESTUtils.httpPostJSON(uiServerURL + "/multibuy", buyRequest,
-                            Config.DEBUG));
+                            0, Config.DEBUG));
 
             assert buyResponse.getInt("Stock") == initialStock;
             System.out.println(

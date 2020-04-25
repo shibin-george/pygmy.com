@@ -50,7 +50,8 @@ public class ConcurrentTests {
                 JSONObject buyResponse;
                 try {
                     buyResponse = new JSONObject(
-                            HttpRESTUtils.httpPost(uiServerURL + "/buy/" + bookId, Config.DEBUG));
+                            HttpRESTUtils.httpPost(uiServerURL + "/buy/" + bookId, 0,
+                                    Config.DEBUG));
 
                     // all successful buy requests must come tagged with
                     // CatalogServer's unique timestamp
@@ -93,7 +94,7 @@ public class ConcurrentTests {
 
         // get the initial count in stock
         JSONObject queryResponse = new JSONObject(
-                HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + bookId, Config.DEBUG));
+                HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + bookId, 0, Config.DEBUG));
 
         System.out.println(queryResponse.toString(2));
 

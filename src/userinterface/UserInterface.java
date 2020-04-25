@@ -40,14 +40,14 @@ public class UserInterface {
                     String topicName = chooseFromTopics();
                     System.out.println(new JSONObject(
                             HttpRESTUtils.httpGet(uiServerURL + "/search/" + topicName,
-                                    Config.DEBUG))
+                                    0, Config.DEBUG))
                                             .toString(2));
                     break;
                 case 2: // lookup
                     String lookupBookId = chooseBookId();
                     System.out.println(new JSONObject(
                             HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + lookupBookId,
-                                    Config.DEBUG))
+                                    0, Config.DEBUG))
                                             .toString(2));
                     break;
                 case 3: // buy
@@ -56,7 +56,7 @@ public class UserInterface {
                     if (numItems == 1) {
                         System.out.println(new JSONObject(
                                 HttpRESTUtils.httpPost(uiServerURL + "/buy/" + buyBookId,
-                                        Config.DEBUG))
+                                        0, Config.DEBUG))
                                                 .toString(2));
                     } else {
                         JSONObject buyRequest = new JSONObject();
@@ -64,7 +64,7 @@ public class UserInterface {
                         buyRequest.put("count", numItems);
                         System.out.println(new JSONObject(
                                 HttpRESTUtils.httpPostJSON(uiServerURL + "/multibuy", buyRequest,
-                                        Config.DEBUG))
+                                        0, Config.DEBUG))
                                                 .toString(2));
                     }
                     break;

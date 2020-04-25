@@ -36,6 +36,8 @@ public class OrderServer {
 
     private static String uiIpAddress, ipAddress;
 
+    private static final int CATALOG_HTTP_REQ_TIMEOUT = 7000;
+
     public static void main(String[] args) throws IOException, InterruptedException {
 
         InetAddress ip = InetAddress.getLocalHost();
@@ -66,7 +68,7 @@ public class OrderServer {
         catalogLoadBalancer = new RoundRobinLoadBalancer<String>(5);
         catalogHeartbeatMonitor =
                 new HeartbeatMonitor<String, JSONObject, String, JSONObject>(catalogLoadBalancer,
-                        7000);
+                        CATALOG_HTTP_REQ_TIMEOUT);
 
         // expose the endpoints
 
@@ -130,7 +132,7 @@ public class OrderServer {
 
                 @Override
                 public void run() {
-                    HttpRESTUtils.httpPost(uiIpAddress + "/order/ack/" + jobId, Config.DEBUG);
+                    HttpRESTUtils.httpPost(uiIpAddress + "/order/ack/" + jobId, 0, Config.DEBUG);
                 }
             });
             ackThread.start();
@@ -173,7 +175,6 @@ public class OrderServer {
                     try {
                         Thread.sleep(RECOVERY_WAKEUP_TIMEOUT_IN_MILLISECONDS);
                     } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 }
@@ -215,7 +216,8 @@ public class OrderServer {
                         + updateRequest.getString("bookId"));
 
         String updateResponse =
-                HttpRESTUtils.httpPostJSON(catalogServer + "/update", updateRequest, Config.DEBUG);
+                HttpRESTUtils.httpPostJSON(catalogServer + "/update", updateRequest,
+                        CATALOG_HTTP_REQ_TIMEOUT, Config.DEBUG);
 
         if (updateResponse != null) {
             catalogHeartbeatMonitor.addResponse(jobId, new JSONObject(updateResponse));
@@ -233,7 +235,7 @@ public class OrderServer {
                 while (true) {
                     try {
                         HttpRESTUtils.httpPostJSON(uiIpAddress + "/order/add", request,
-                                Config.DEBUG);
+                                0, Config.DEBUG);
 
                         // do it again after 20 seconds
                         Thread.sleep(10000);

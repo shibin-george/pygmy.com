@@ -45,6 +45,9 @@ public class UIServer {
     // the first CatalogServer that contacts UIServer is handed the lock
     private static boolean tokenHandedOut = false;
 
+    private static final int CATALOG_HTTP_REQ_TIMEOUT = 2000, ORDER_HTTP_REQ_TIMEOUT = 20000,
+            HTTP_REQ_TIMEOUT = 1000;
+
     public static void main(String args[]) throws IOException, InterruptedException {
 
         InetAddress ip = InetAddress.getLocalHost();
@@ -56,10 +59,11 @@ public class UIServer {
         orderLoadBalancer = new RoundRobinLoadBalancer<String>(5);
 
         catalogHeartbeatMonitor =
-                new HeartbeatMonitor<String, String, String, JSONObject>(catalogLoadBalancer, 2000);
+                new HeartbeatMonitor<String, String, String, JSONObject>(catalogLoadBalancer,
+                        CATALOG_HTTP_REQ_TIMEOUT);
         orderHeartbeatMonitor =
                 new HeartbeatMonitor<String, JSONObject, String, JSONObject>(orderLoadBalancer,
-                        20000);
+                        ORDER_HTTP_REQ_TIMEOUT);
 
         threadPool(10);
 
@@ -239,7 +243,8 @@ public class UIServer {
             introResponse.put("catalog-servers", cServerArray);
             for (String oServer : orderLoadBalancer.getAllServers().keySet()) {
                 System.out.println("Sending cservers to " + oServer);
-                HttpRESTUtils.httpPostJSON(oServer + "/catalog/add", introResponse, Config.DEBUG);
+                HttpRESTUtils.httpPostJSON(oServer + "/catalog/add", introResponse,
+                        HTTP_REQ_TIMEOUT, Config.DEBUG);
             }
 
             // inform all catalog-servers about all catalog-servers
@@ -251,7 +256,7 @@ public class UIServer {
             for (String cServer : catalogLoadBalancer.getAllServers().keySet()) {
                 System.out.println("Sending cservers to " + cServer);
                 HttpRESTUtils.httpPostJSON(cServer + "/uibroadcast", catalogBroadcast,
-                        Config.DEBUG);
+                        HTTP_REQ_TIMEOUT, Config.DEBUG);
             }
 
             return response;
@@ -331,7 +336,7 @@ public class UIServer {
         catalogHeartbeatMonitor.markJobStarted(lookupTopicJob);
 
         String response = HttpRESTUtils.httpGet(catalogServer
-                + "/query/topic/" + topic + "@" + jobId, Config.DEBUG);
+                + "/query/topic/" + topic + "@" + jobId, CATALOG_HTTP_REQ_TIMEOUT, Config.DEBUG);
 
         if (response != null) {
             catalogHeartbeatMonitor.addResponse(jobId, new JSONObject(response));
@@ -350,7 +355,7 @@ public class UIServer {
         catalogHeartbeatMonitor.markJobStarted(lookupBookJob);
 
         String response = HttpRESTUtils.httpGet(catalogServer
-                + "/query/book/" + bookId + "@" + jobId, Config.DEBUG);
+                + "/query/book/" + bookId + "@" + jobId, CATALOG_HTTP_REQ_TIMEOUT, Config.DEBUG);
 
         if (response != null) {
             catalogHeartbeatMonitor.addResponse(jobId, new JSONObject(response));
@@ -369,7 +374,7 @@ public class UIServer {
         orderHeartbeatMonitor.markJobStarted(buyJob);
 
         String response = HttpRESTUtils.httpPostJSON(orderServer
-                + "/buy", buyRequest, Config.DEBUG);
+                + "/buy", buyRequest, ORDER_HTTP_REQ_TIMEOUT, Config.DEBUG);
 
         if (response != null) {
             orderHeartbeatMonitor.addResponse(jobId, new JSONObject(response));

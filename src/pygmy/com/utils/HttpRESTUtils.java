@@ -1,7 +1,6 @@
 package pygmy.com.utils;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -11,12 +10,19 @@ import org.json.JSONObject;
 
 public class HttpRESTUtils {
 
-    public static String httpGet(String urlString, boolean log) {
+    private static int HTTP_CONNECT_TIMEOUT = 2000 /* milliseconds */;
+
+    public static String httpGet(String urlString, int timeout, boolean log) {
 
         try {
             URL url = new URL(urlString);
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            // set timeout
+            conn.setConnectTimeout(HTTP_CONNECT_TIMEOUT);
+            if (timeout != 0)
+                conn.setReadTimeout(timeout);
 
             // buffer the result into string
             BufferedReader reader =
@@ -39,7 +45,7 @@ public class HttpRESTUtils {
         }
     }
 
-    public static String httpPost(String urlString, boolean log) {
+    public static String httpPost(String urlString, int timeout, boolean log) {
 
         try {
             URL url = new URL(urlString);
@@ -50,9 +56,10 @@ public class HttpRESTUtils {
 
             conn.setRequestProperty("Accept", "application/json");
 
-            if (conn.getResponseCode() != 200) {
-                throw new IOException(conn.getResponseMessage());
-            }
+            // set timeout
+            conn.setConnectTimeout(HTTP_CONNECT_TIMEOUT);
+            if (timeout != 0)
+                conn.setReadTimeout(timeout);
 
             // buffer the result into string
             BufferedReader reader =
@@ -76,7 +83,7 @@ public class HttpRESTUtils {
     }
 
     public static String httpPostJSON(String urlString,
-            JSONObject jsonObject, boolean log) {
+            JSONObject jsonObject, int timeout, boolean log) {
 
         try {
             URL url = new URL(urlString);
@@ -89,11 +96,11 @@ public class HttpRESTUtils {
             conn.setRequestProperty("Accept", "application/json");
             conn.setDoOutput(true);
 
-            /*
-             * if (conn.getResponseCode() != 200) {
-             * throw new IOException(conn.getResponseMessage());
-             * }
-             */
+            // set timeout
+            conn.setConnectTimeout(HTTP_CONNECT_TIMEOUT);
+            if (timeout != 0)
+                conn.setReadTimeout(timeout);
+
             // write the JSON request
             try (OutputStream os = conn.getOutputStream()) {
                 byte[] input = jsonObject.toString().getBytes("utf-8");

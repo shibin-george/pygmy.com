@@ -42,7 +42,8 @@ public class FaultToleranceTests {
 
         // search for topic: distributed-systems
         JSONObject reply = new JSONObject(
-                HttpRESTUtils.httpGet(uiServerURL + "/search/distributed-systems", Config.DEBUG));
+                HttpRESTUtils.httpGet(uiServerURL + "/search/distributed-systems", 0,
+                        Config.DEBUG));
 
         if (!bothAlive) {
             assert reply.getString("ServedByCatalogServer").startsWith(catalogServerURL);
@@ -74,7 +75,7 @@ public class FaultToleranceTests {
 
         // search for topic: graduate-school
         reply = new JSONObject(
-                HttpRESTUtils.httpGet(uiServerURL + "/search/graduate-school", Config.DEBUG));
+                HttpRESTUtils.httpGet(uiServerURL + "/search/graduate-school", 0, Config.DEBUG));
 
         if (!bothAlive) {
             assert reply.getString("ServedByCatalogServer").startsWith(catalogServerURL);
@@ -107,7 +108,7 @@ public class FaultToleranceTests {
                 "\nTesting /lookup endpoint when exactly one of the catalog-server replicas is down..");
 
         JSONObject lookupResponse = new JSONObject(
-                HttpRESTUtils.httpGet(uiServerURL + "/lookup/impstudent", Config.DEBUG));
+                HttpRESTUtils.httpGet(uiServerURL + "/lookup/impstudent", 0, Config.DEBUG));
 
         if (!bothAlive) {
             assert lookupResponse.getString("ServedByCatalogServer").startsWith(catalogServerURL);
@@ -131,7 +132,7 @@ public class FaultToleranceTests {
         System.out.println("/lookup/impstudent fetched all the correct details for the book!");
 
         lookupResponse = new JSONObject(
-                HttpRESTUtils.httpGet(uiServerURL + "/lookup/xenart177", Config.DEBUG));
+                HttpRESTUtils.httpGet(uiServerURL + "/lookup/xenart177", 0, Config.DEBUG));
 
         if (!bothAlive) {
             assert lookupResponse.getString("ServedByCatalogServer").startsWith(catalogServerURL);
@@ -155,7 +156,7 @@ public class FaultToleranceTests {
         System.out.println("/lookup/xenart177 fetched all the correct details for the book!");
 
         lookupResponse = new JSONObject(
-                HttpRESTUtils.httpGet(uiServerURL + "/lookup/67720min", Config.DEBUG));
+                HttpRESTUtils.httpGet(uiServerURL + "/lookup/67720min", 0, Config.DEBUG));
 
         if (!bothAlive) {
             assert lookupResponse.getString("ServedByCatalogServer").startsWith(catalogServerURL);
@@ -179,7 +180,7 @@ public class FaultToleranceTests {
         System.out.println("/lookup/67720min fetched all the correct details for the book!");
 
         lookupResponse = new JSONObject(
-                HttpRESTUtils.httpGet(uiServerURL + "/lookup/rpcdummies", Config.DEBUG));
+                HttpRESTUtils.httpGet(uiServerURL + "/lookup/rpcdummies", 0, Config.DEBUG));
 
         if (!bothAlive) {
             assert lookupResponse.getString("ServedByCatalogServer").startsWith(catalogServerURL);
@@ -221,7 +222,7 @@ public class FaultToleranceTests {
 
             // get the initial count in stock
             JSONObject lookupResponse = new JSONObject(
-                    HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + bookId, Config.DEBUG));
+                    HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + bookId, 0, Config.DEBUG));
 
             int initialStock = lookupResponse.getInt("Stock");
 
@@ -235,7 +236,7 @@ public class FaultToleranceTests {
 
             // lookup again
             lookupResponse = new JSONObject(
-                    HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + bookId, Config.DEBUG));
+                    HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + bookId, 0, Config.DEBUG));
 
             assert lookupResponse.getInt("Stock") == initialStock + updateBy;
             System.out.println(
@@ -251,7 +252,7 @@ public class FaultToleranceTests {
 
             JSONObject buyResponse = new JSONObject(
                     HttpRESTUtils.httpPostJSON(uiServerURL + "/multibuy", buyRequest,
-                            Config.DEBUG));
+                            0, Config.DEBUG));
 
             if (!bothAlive) {
                 if (buyResponse.getString("ServedByCatalogServer").startsWith(catalogServerURL))

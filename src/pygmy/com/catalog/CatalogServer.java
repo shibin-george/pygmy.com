@@ -45,6 +45,8 @@ public class CatalogServer {
 
     private static boolean helpingInRecovery = false;
 
+    private static int HTTP_ALIVE_TIMEOUT = 1000;
+
     public static void main(String[] args) throws IOException, InterruptedException {
 
         InetAddress ip = InetAddress.getLocalHost();
@@ -119,7 +121,8 @@ public class CatalogServer {
 
                 @Override
                 public void run() {
-                    HttpRESTUtils.httpPost(uiIpAddress + "/catalog/ack/" + params[1], Config.DEBUG);
+                    HttpRESTUtils.httpPost(uiIpAddress + "/catalog/ack/" + params[1], 0,
+                            Config.DEBUG);
                 }
             });
             ackThread.start();
@@ -151,7 +154,8 @@ public class CatalogServer {
 
                 @Override
                 public void run() {
-                    HttpRESTUtils.httpPost(uiIpAddress + "/catalog/ack/" + params[1], Config.DEBUG);
+                    HttpRESTUtils.httpPost(uiIpAddress + "/catalog/ack/" + params[1], 0,
+                            Config.DEBUG);
                 }
             });
             ackThread.start();
@@ -193,7 +197,7 @@ public class CatalogServer {
             boolean replyTo = !updateRequest.optString("reply-to", "none").equals("none");
 
             // invalidate cache
-            HttpRESTUtils.httpPost(uiIpAddress + "/invalidate/" + bookId, Config.DEBUG);
+            HttpRESTUtils.httpPost(uiIpAddress + "/invalidate/" + bookId, 0, Config.DEBUG);
 
             System.out.println(
                     getTime() + "ACKing jobId: " + orderId.substring(1));
@@ -206,7 +210,7 @@ public class CatalogServer {
                         HttpRESTUtils.httpPost(
                                 updateRequest.getString("reply-to") + "/catalog/ack/"
                                         + orderId.substring(1),
-                                Config.DEBUG);
+                                0, Config.DEBUG);
                 }
             });
             ackThread.start();
@@ -319,7 +323,7 @@ public class CatalogServer {
             }
 
             String response = HttpRESTUtils.httpGet(otherReplica + "/recovery/initiate",
-                    Config.DEBUG);
+                    0, Config.DEBUG);
             if (response == null) {
                 System.out.println("Exiting since recovery is not possible");
                 System.exit(1);
@@ -338,7 +342,7 @@ public class CatalogServer {
             catalogDb.prettyPrintCatalog();
 
             // now that recovery is complete, convey the same to the other replica
-            HttpRESTUtils.httpGet(otherReplica + "/recovery/complete", Config.DEBUG);
+            HttpRESTUtils.httpGet(otherReplica + "/recovery/complete", 0, Config.DEBUG);
 
             System.out.println("Recovery complete..");
         }
@@ -377,7 +381,7 @@ public class CatalogServer {
                             if (replicaServer != null) {
                                 // replicate this update on the replica-server
                                 HttpRESTUtils.httpPostJSON(replicaServer + "/replicate",
-                                        task.getValue(), Config.DEBUG);
+                                        task.getValue(), 0, Config.DEBUG);
 
                                 System.out.println(getTime() + "Replicated order: " + task.getKey()
                                         + " on replica server..");
@@ -431,7 +435,8 @@ public class CatalogServer {
     }
 
     private static boolean isAlive(String replicaServer) {
-        String response = HttpRESTUtils.httpGet(replicaServer + "/heartbeat", Config.DEBUG);
+        String response = HttpRESTUtils.httpGet(replicaServer + "/heartbeat",
+                HTTP_ALIVE_TIMEOUT, Config.DEBUG);
 
         if (response == null)
             return false;
@@ -446,7 +451,7 @@ public class CatalogServer {
 
         // now, we transfer the token
         String response =
-                HttpRESTUtils.httpPost(replicaServer + "/lock", Config.DEBUG);
+                HttpRESTUtils.httpPost(replicaServer + "/lock", HTTP_ALIVE_TIMEOUT, Config.DEBUG);
 
         if (response == null)
             return false;
@@ -510,7 +515,7 @@ public class CatalogServer {
                     try {
                         JSONObject response = new JSONObject(
                                 HttpRESTUtils.httpPostJSON(uiIpAddress + "/catalog/add", request,
-                                        Config.DEBUG));
+                                        0, Config.DEBUG));
 
                         // check if we have the lock
                         if (response.optString("token", "false").equals("true")) {

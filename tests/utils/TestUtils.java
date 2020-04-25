@@ -16,7 +16,7 @@ public class TestUtils {
 
         // get the initial count in stock
         JSONObject queryResponse = new JSONObject(
-                HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + bookId, Config.DEBUG));
+                HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + bookId, 0, Config.DEBUG));
         int initialCount = queryResponse.getInt("Stock");
 
         // send a JSON POST request to catalog-server to add to stock
@@ -26,7 +26,7 @@ public class TestUtils {
 
         JSONObject updateResponse = new JSONObject(
                 HttpRESTUtils.httpPostJSON(catalogServerURL + "/update", updateRequest,
-                        Config.DEBUG));
+                        0, Config.DEBUG));
         int finalCount = updateResponse.getInt("Stock");
 
         assert finalCount == initialCount + updateBy;

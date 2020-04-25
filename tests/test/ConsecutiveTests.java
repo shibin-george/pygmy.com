@@ -28,7 +28,7 @@ public class ConsecutiveTests {
 
             // get the initial count in stock
             JSONObject queryResponse = new JSONObject(
-                    HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + bookId, Config.DEBUG));
+                    HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + bookId, 0, Config.DEBUG));
 
             System.out.println(queryResponse.toString(2));
             int stockCount = queryResponse.getInt("Stock");
@@ -64,7 +64,7 @@ public class ConsecutiveTests {
             int iter = numBuyRequests, successfulBuys = 0;
             while (iter-- > 0) {
                 JSONObject buyResponse = new JSONObject(
-                        HttpRESTUtils.httpPost(uiServerURL + "/buy/" + bookId, Config.DEBUG));
+                        HttpRESTUtils.httpPost(uiServerURL + "/buy/" + bookId, 0, Config.DEBUG));
                 if (!expectedFailure) {
                     assert buyResponse.getInt("code") == 0;
                     int newCount = buyResponse.getInt("Stock");
@@ -95,7 +95,7 @@ public class ConsecutiveTests {
 
             // final check of Stock
             queryResponse = new JSONObject(
-                    HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + bookId, Config.DEBUG));
+                    HttpRESTUtils.httpGet(uiServerURL + "/lookup/" + bookId, 0, Config.DEBUG));
             System.out.println(queryResponse.toString(2));
 
             if (checkOutOfStockBehavior) {
