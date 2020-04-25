@@ -52,12 +52,6 @@ public class UIServer {
 
         System.out.println(getTime() + "UI Server, running on " + ipAddress + "...");
 
-        if (args.length == 0) {
-            System.out
-                    .println(getTime() + "CatalogServer and OrderServer not specified! Exiting..");
-            System.exit(1);
-        }
-
         catalogLoadBalancer = new RoundRobinLoadBalancer<String>(5);
         orderLoadBalancer = new RoundRobinLoadBalancer<String>(5);
 
