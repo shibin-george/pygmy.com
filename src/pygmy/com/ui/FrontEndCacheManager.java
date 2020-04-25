@@ -107,7 +107,7 @@ public class FrontEndCacheManager {
         return bookLookupResult;
     }
 
-    public boolean invalidateBookLookupCache(String bookId) {
+    public synchronized boolean invalidateBookLookupCache(String bookId) {
         return bookLookupCache.containsAndRemove(bookId);
     }
 
