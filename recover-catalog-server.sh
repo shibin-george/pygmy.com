@@ -13,3 +13,4 @@ ORDER_IP1="128.119.243.175"
 ORDER_IP2="128.119.243.168"
 
 ssh $USER@$CATALOG_SERVER2 "cd $PWD && ./run-catalog-server.sh $UI_IP recover 2"
+echo -e "Restarted Catalog-Server @ $CATALOG_SERVER2"

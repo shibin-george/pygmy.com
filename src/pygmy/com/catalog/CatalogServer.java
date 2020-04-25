@@ -519,7 +519,7 @@ public class CatalogServer {
                         }
 
                         // do it again after 20 seconds
-                        Thread.sleep(20000);
+                        Thread.sleep(10000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

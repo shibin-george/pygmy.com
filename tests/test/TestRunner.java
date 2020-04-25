@@ -54,37 +54,57 @@ public class TestRunner {
     private static void invokeTest(int test) throws JSONException, IOException {
         switch (test) {
         case 1:
-            showBanner(test);
+            showBanner(test + "");
             SanityTests.testSearchAndLookup(catalogServerURL, uiServerURL);
-            showSuccessBanner(test);
+            showSuccessBanner(test + "");
             break;
         case 2:
-            showBanner(test);
+            showBanner(test + "");
             SanityTests.testMultiBuyAndUpdate(catalogServerURL, uiServerURL);
-            showSuccessBanner(test);
+            showSuccessBanner(test + "");
             break;
 
         case 3:
-            showBanner(test);
+            showBanner(test + "");
             ConsecutiveTests.testConsecutiveBuy(catalogServerURL, uiServerURL,
                     false);
-            showSuccessBanner(test);
+            showSuccessBanner(test + "");
             break;
         case 4:
-            showBanner(test);
+            showBanner(test + "");
             ConsecutiveTests.testConsecutiveBuy(catalogServerURL, uiServerURL,
                     true);
-            showSuccessBanner(test);
+            showSuccessBanner(test + "");
             break;
         case 5:
-            showBanner(test);
+            showBanner(test + "");
             ConcurrentTests.testConcurrentBuy(catalogServerURL, uiServerURL);
-            showSuccessBanner(test);
+            showSuccessBanner(test + "");
+            break;
+        case 6:
+            showBanner("");
+            FaultToleranceTests.testSearchAndLookup(catalogServerURL, uiServerURL, false);
+            showSuccessBanner("");
+            break;
+        case 7:
+            showBanner("");
+            FaultToleranceTests.testMultiBuy(catalogServerURL, uiServerURL, false);
+            showSuccessBanner("");
+            break;
+        case 8:
+            showBanner("");
+            FaultToleranceTests.testSearchAndLookup(catalogServerURL, uiServerURL, true);
+            showSuccessBanner("");
+            break;
+        case 9:
+            showBanner("");
+            FaultToleranceTests.testMultiBuy(catalogServerURL, uiServerURL, true);
+            showSuccessBanner("");
             break;
         }
     }
 
-    private static void showBanner(int test) {
+    private static void showBanner(String test) {
         System.out.println(
                 "\n\n===============================================================================");
         System.out.println("Starting test #" + test);
@@ -92,7 +112,7 @@ public class TestRunner {
                 "===============================================================================\n");
     }
 
-    public static void showSuccessBanner(int test) {
+    public static void showSuccessBanner(String test) {
         System.out.println("\nPassed test #" + test);
         System.out.println(
                 "===============================================================================\n");

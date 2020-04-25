@@ -12,9 +12,10 @@ import config.Config;
 import pygmy.com.utils.HttpRESTUtils;
 import utils.TestUtils;
 
-public class SanityTests {
+public class FaultToleranceTests {
 
-    public static void testSearchAndLookup(String catalogServerURL, String uiServerURL)
+    public static void testSearchAndLookup(String catalogServerURL, String uiServerURL,
+            boolean bothAlive)
             throws JSONException, IOException {
         HashMap<String, String> bookTitle = new HashMap<String, String>();
         bookTitle.put("67720min", "How to get a good grade in 677 in 20 minutes a day.");
@@ -34,13 +35,30 @@ public class SanityTests {
         bookTopic.put("whytheory", "graduate-school");
         bookTopic.put("project3", "distributed-systems");
 
-        System.out.println("\nTesting /search endpoint..");
+        boolean servedByOtherReplica = false;
+
+        System.out.println(
+                "\nTesting /search endpoint when exactly one of the catalog-server replicas is down..");
 
         // search for topic: distributed-systems
-        JSONArray searchResponse = new JSONObject(
-                HttpRESTUtils.httpGet(uiServerURL + "/search/distributed-systems", Config.DEBUG))
-                        .getJSONArray("items");
+        JSONObject reply = new JSONObject(
+                HttpRESTUtils.httpGet(uiServerURL + "/search/distributed-systems", Config.DEBUG));
 
+        if (!bothAlive) {
+            assert reply.getString("ServedByCatalogServer").startsWith(catalogServerURL);
+            System.out.println(
+                    "/search/distributed-systems was served by " + catalogServerURL
+                            + " as was expected!");
+        } else {
+            String servedBy = reply.getString("ServedByCatalogServer");
+            if (!servedBy.startsWith(catalogServerURL)) {
+                System.out.println(
+                        "This request was served by " + servedBy);
+                servedByOtherReplica = true;
+            }
+        }
+
+        JSONArray searchResponse = reply.getJSONArray("items");
         assert searchResponse.length() == 3;
         System.out.println("/search/distributed-systems fetched correct number of books!");
 
@@ -54,11 +72,25 @@ public class SanityTests {
         }
         System.out.println("/search/distributed-systems fetched all the correct books!");
 
-        // search for topic: distributed-systems
-        searchResponse = new JSONObject(
-                HttpRESTUtils.httpGet(uiServerURL + "/search/graduate-school", Config.DEBUG))
-                        .getJSONArray("items");
+        // search for topic: graduate-school
+        reply = new JSONObject(
+                HttpRESTUtils.httpGet(uiServerURL + "/search/graduate-school", Config.DEBUG));
 
+        if (!bothAlive) {
+            assert reply.getString("ServedByCatalogServer").startsWith(catalogServerURL);
+            System.out.println(
+                    "/search/graduate-school was served by " + catalogServerURL
+                            + " as was expected!");
+        } else {
+            String servedBy = reply.getString("ServedByCatalogServer");
+            if (!servedBy.startsWith(catalogServerURL)) {
+                System.out.println(
+                        "This request was served by " + servedBy);
+                servedByOtherReplica = true;
+            }
+        }
+
+        searchResponse = reply.getJSONArray("items");
         assert searchResponse.length() == 4;
         System.out.println("/search/graduate-school fetched correct number of books!");
 
@@ -71,10 +103,25 @@ public class SanityTests {
         }
         System.out.println("/search/graduate-school fetched all the correct books!");
 
-        System.out.println("\nTesting /lookup endpoint..");
-        // search for topic: distributed-systems
+        System.out.println(
+                "\nTesting /lookup endpoint when exactly one of the catalog-server replicas is down..");
+
         JSONObject lookupResponse = new JSONObject(
                 HttpRESTUtils.httpGet(uiServerURL + "/lookup/impstudent", Config.DEBUG));
+
+        if (!bothAlive) {
+            assert lookupResponse.getString("ServedByCatalogServer").startsWith(catalogServerURL);
+            System.out.println(
+                    "/lookup/impstudent was served by " + catalogServerURL
+                            + " as was expected!");
+        } else {
+            String servedBy = lookupResponse.getString("ServedByCatalogServer");
+            if (!servedBy.startsWith(catalogServerURL)) {
+                System.out.println(
+                        "This request was served by " + servedBy);
+                servedByOtherReplica = true;
+            }
+        }
 
         assert lookupResponse.get("ID").equals("impstudent");
         assert lookupResponse.get("Topic")
@@ -83,9 +130,22 @@ public class SanityTests {
                 .equals(bookTitle.get(lookupResponse.get("ID")));
         System.out.println("/lookup/impstudent fetched all the correct details for the book!");
 
-        // search for topic: distributed-systems
         lookupResponse = new JSONObject(
                 HttpRESTUtils.httpGet(uiServerURL + "/lookup/xenart177", Config.DEBUG));
+
+        if (!bothAlive) {
+            assert lookupResponse.getString("ServedByCatalogServer").startsWith(catalogServerURL);
+            System.out.println(
+                    "/lookup/xenart177 was served by " + catalogServerURL
+                            + " as was expected!");
+        } else {
+            String servedBy = lookupResponse.getString("ServedByCatalogServer");
+            if (!servedBy.startsWith(catalogServerURL)) {
+                System.out.println(
+                        "This request was served by " + servedBy);
+                servedByOtherReplica = true;
+            }
+        }
 
         assert lookupResponse.get("ID").equals("xenart177");
         assert lookupResponse.get("Topic")
@@ -94,9 +154,22 @@ public class SanityTests {
                 .equals(bookTitle.get(lookupResponse.get("ID")));
         System.out.println("/lookup/xenart177 fetched all the correct details for the book!");
 
-        // search for topic: distributed-systems
         lookupResponse = new JSONObject(
                 HttpRESTUtils.httpGet(uiServerURL + "/lookup/67720min", Config.DEBUG));
+
+        if (!bothAlive) {
+            assert lookupResponse.getString("ServedByCatalogServer").startsWith(catalogServerURL);
+            System.out.println(
+                    "/lookup/67720min was served by " + catalogServerURL
+                            + " as was expected!");
+        } else {
+            String servedBy = lookupResponse.getString("ServedByCatalogServer");
+            if (!servedBy.startsWith(catalogServerURL)) {
+                System.out.println(
+                        "This request was served by " + servedBy);
+                servedByOtherReplica = true;
+            }
+        }
 
         assert lookupResponse.get("ID").equals("67720min");
         assert lookupResponse.get("Topic")
@@ -105,9 +178,22 @@ public class SanityTests {
                 .equals(bookTitle.get(lookupResponse.get("ID")));
         System.out.println("/lookup/67720min fetched all the correct details for the book!");
 
-        // search for topic: distributed-systems
         lookupResponse = new JSONObject(
                 HttpRESTUtils.httpGet(uiServerURL + "/lookup/rpcdummies", Config.DEBUG));
+
+        if (!bothAlive) {
+            assert lookupResponse.getString("ServedByCatalogServer").startsWith(catalogServerURL);
+            System.out.println(
+                    "/lookup/rpcdummies was served by " + catalogServerURL
+                            + " as was expected!");
+        } else {
+            String servedBy = lookupResponse.getString("ServedByCatalogServer");
+            if (!servedBy.startsWith(catalogServerURL)) {
+                System.out.println(
+                        "This request was served by " + servedBy);
+                servedByOtherReplica = true;
+            }
+        }
 
         assert lookupResponse.get("ID").equals("rpcdummies");
         assert lookupResponse.get("Topic")
@@ -116,13 +202,20 @@ public class SanityTests {
                 .equals(bookTitle.get(lookupResponse.get("ID")));
         System.out.println("/lookup/rpcdummies fetched all the correct details for the book!");
 
-        System.out.println("/search and /lookup endpoints are working perfectly fine!");
+        if (bothAlive) {
+            assert servedByOtherReplica == true;
+            System.out.println(
+                    "The restarted replica is up and running and is processing requests!!");
+        }
     }
 
-    public static void testMultiBuyAndUpdate(String catalogServerURL, String uiServerURL)
+    public static void testMultiBuy(String catalogServerURL, String uiServerURL, boolean bothAlive)
             throws JSONException, IOException {
 
-        String[] bookIds = { "xenart177", "67720min", "rpcdummies", "impstudent" };
+        String[] bookIds = { "xenart177", "67720min", "rpcdummies", "impstudent", "project3",
+                "pioneer", "whytheory" };
+
+        boolean servedByOtherReplica = false;
 
         for (String bookId : bookIds) {
 
@@ -160,13 +253,31 @@ public class SanityTests {
                     HttpRESTUtils.httpPostJSON(uiServerURL + "/multibuy", buyRequest,
                             Config.DEBUG));
 
+            if (!bothAlive) {
+                if (buyResponse.getString("ServedByCatalogServer").startsWith(catalogServerURL))
+                    System.out.println(
+                            "This buy request was served by " + catalogServerURL
+                                    + " as was expected!");
+            } else {
+                String servedBy = buyResponse.getString("ServedByCatalogServer");
+                if (!servedBy.startsWith(catalogServerURL)) {
+                    System.out.println(
+                            "This buy request was served by " + servedBy);
+                    servedByOtherReplica = true;
+                }
+            }
+
             assert buyResponse.getInt("Stock") == initialStock;
             System.out.println(
                     "Stock of " + bookId + " after buy operation is as expected: "
                             + initialStock);
         }
 
-        System.out.println("/multibuy and /update endpoints are working perfectly fine!");
+        if (bothAlive) {
+            assert servedByOtherReplica == true;
+            System.out.println(
+                    "The restarted replica is up and running and is processing requests!!");
+        }
     }
 
 }
