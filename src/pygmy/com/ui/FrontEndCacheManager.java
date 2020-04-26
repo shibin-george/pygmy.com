@@ -41,7 +41,6 @@ public class FrontEndCacheManager {
                             CacheEntry<String, JSONObject> arg1) {
                         System.out.println(getTime() +
                                 "Removing book: " + arg1.getKey() + " from cache!");
-
                     }
                 })
                 .build();

@@ -101,6 +101,16 @@ public class TestRunner {
             FaultToleranceTests.testMultiBuy(catalogServerURL, uiServerURL, true);
             showSuccessBanner("");
             break;
+        case 10:
+            showBanner("");
+            CacheTests.reportLatencies(catalogServerURL, uiServerURL);
+            showSuccessBanner("");
+            break;
+        case 11:
+            showBanner("");
+            CacheTests.testConsistency(catalogServerURL, uiServerURL);
+            showSuccessBanner("");
+            break;
         }
     }
 

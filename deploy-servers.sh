@@ -73,3 +73,6 @@ then
 else
   echo "Order Server is not running! Check this before proceeding!!"
 fi
+
+sleep 5
+sync

@@ -242,7 +242,6 @@ public class UIServer {
             }
             introResponse.put("catalog-servers", cServerArray);
             for (String oServer : orderLoadBalancer.getAllServers().keySet()) {
-                System.out.println("Sending cservers to " + oServer);
                 HttpRESTUtils.httpPostJSON(oServer + "/catalog/add", introResponse,
                         HTTP_REQ_TIMEOUT, Config.DEBUG);
             }
@@ -254,7 +253,6 @@ public class UIServer {
                 catalogBroadcast.put(cServer, cServerMap.get(cServer));
             }
             for (String cServer : catalogLoadBalancer.getAllServers().keySet()) {
-                System.out.println("Sending cservers to " + cServer);
                 HttpRESTUtils.httpPostJSON(cServer + "/uibroadcast", catalogBroadcast,
                         HTTP_REQ_TIMEOUT, Config.DEBUG);
             }
