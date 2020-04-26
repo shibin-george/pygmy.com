@@ -45,20 +45,6 @@ public class FaultToleranceTests {
                 HttpRESTUtils.httpGet(uiServerURL + "/search/distributed-systems", 0,
                         Config.DEBUG));
 
-        if (!bothAlive) {
-            assert reply.getString("ServedByCatalogServer").startsWith(catalogServerURL);
-            System.out.println(
-                    "/search/distributed-systems was served by " + catalogServerURL
-                            + " as was expected!");
-        } else {
-            String servedBy = reply.getString("ServedByCatalogServer");
-            if (!servedBy.startsWith(catalogServerURL)) {
-                System.out.println(
-                        "This request was served by " + servedBy);
-                servedByOtherReplica = true;
-            }
-        }
-
         JSONArray searchResponse = reply.getJSONArray("items");
         assert searchResponse.length() == 3;
         System.out.println("/search/distributed-systems fetched correct number of books!");
@@ -76,20 +62,6 @@ public class FaultToleranceTests {
         // search for topic: graduate-school
         reply = new JSONObject(
                 HttpRESTUtils.httpGet(uiServerURL + "/search/graduate-school", 0, Config.DEBUG));
-
-        if (!bothAlive) {
-            assert reply.getString("ServedByCatalogServer").startsWith(catalogServerURL);
-            System.out.println(
-                    "/search/graduate-school was served by " + catalogServerURL
-                            + " as was expected!");
-        } else {
-            String servedBy = reply.getString("ServedByCatalogServer");
-            if (!servedBy.startsWith(catalogServerURL)) {
-                System.out.println(
-                        "This request was served by " + servedBy);
-                servedByOtherReplica = true;
-            }
-        }
 
         searchResponse = reply.getJSONArray("items");
         assert searchResponse.length() == 4;
