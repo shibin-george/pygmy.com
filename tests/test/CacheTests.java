@@ -106,7 +106,7 @@ public class CacheTests {
 
                 assert finalCount == initialCount - howMany;
                 System.out.println("Stock of book: " + bookId + " correctly reported to be "
-                        + initialCount);
+                        + finalCount);
             }
         }
     }
