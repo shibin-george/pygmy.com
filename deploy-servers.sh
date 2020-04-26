@@ -14,7 +14,11 @@ ORDER_IP2="128.119.243.168"
 
 if [[ ${@: -1} == "clean" ]]
 then
+  ./spark-service-graceful-shutdown.sh
   CLEAN="clean"
+else
+  echo -e "Please wait while compilation is in progress.."
+  sleep 10
 fi
 
 chmod +x *.sh && ./compile.sh

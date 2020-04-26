@@ -1,8 +1,5 @@
 package pygmy.com.ui;
 
-import static spark.Spark.get;
-import static spark.Spark.port;
-import static spark.Spark.post;
 import static spark.Spark.*;
 
 import java.io.BufferedWriter;
@@ -265,6 +262,14 @@ public class UIServer {
             JSONObject server = new JSONObject(req.body());
             orderLoadBalancer.add((String) server.get("URL"));
             return getDummyJSONObject();
+        });
+
+        // REST end-point for graceful-shutdown
+        get("/stop", (req, res) -> {
+            res.type("application/json");
+            stop();
+            awaitStop();
+            return "Stopped!";
         });
 
         Thread jobRecoveryThread = new Thread(new Runnable() {

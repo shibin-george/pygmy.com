@@ -1,7 +1,10 @@
 package pygmy.com.order;
 
+import static spark.Spark.awaitStop;
+import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
+import static spark.Spark.stop;
 import static spark.Spark.threadPool;
 
 import java.io.BufferedWriter;
@@ -156,6 +159,14 @@ public class OrderServer {
                 catalogLoadBalancer.add(catalogServers.getString(i));
             }
             return UIServer.getDummyJSONObject();
+        });
+
+        // REST end-point for graceful-shutdown
+        get("/stop", (req, res) -> {
+            res.type("application/json");
+            stop();
+            awaitStop();
+            return "Stopped!";
         });
 
         Thread.sleep(1000);

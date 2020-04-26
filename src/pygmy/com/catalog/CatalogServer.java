@@ -1,8 +1,10 @@
 package pygmy.com.catalog;
 
+import static spark.Spark.awaitStop;
 import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
+import static spark.Spark.stop;
 import static spark.Spark.threadPool;
 
 import java.io.BufferedWriter;
@@ -306,6 +308,23 @@ public class CatalogServer {
             // System.out.println("HeartBeat from replica server..");
 
             return UIServer.getDummyJSONObject();
+        });
+
+        // REST end-point for heartbeat
+        get("/heartbeat", (req, res) -> {
+            res.type("application/json");
+
+            // System.out.println("HeartBeat from replica server..");
+
+            return UIServer.getDummyJSONObject();
+        });
+
+        // REST end-point for graceful-shutdown
+        get("/stop", (req, res) -> {
+            res.type("application/json");
+            stop();
+            awaitStop();
+            return "Stopped!";
         });
 
         Thread.sleep(1000);
