@@ -137,6 +137,7 @@ public class OrderServer {
             });
             ackThread.start();
 
+            updateResponse.put("ServedByOrderServer", ipAddress);
             return updateResponse;
         });
 
