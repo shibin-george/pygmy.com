@@ -13,8 +13,11 @@ fi
 # set classpath
 CP=$(find lib/ -iname "*.jar" -exec readlink -f {} \; | tr '\n' ':')
 
-echo "Crashing one of catalog-server replicas.."
+echo "Crashing one of the catalog-server replicas.."
 ./crash-catalog-server.sh
+
+echo "Crashing one of the order-server replicas.."
+./crash-order-server.sh
 
 echo -e "Clearing cached responses from UIServer..\n"
 ./invalidate-cache.sh
@@ -28,13 +31,19 @@ echo "Checking search/lookup/buy endpoints are still up and running.."
 java -ea -cp $CP:. test.TestRunner $CATALOG_IP $UI_IP 6
 
 # test-case #2: thorough sanity tests on /multibuy and /update endpoints
-java -ea -cp $CP:. test.TestRunner $CATALOG_IP $UI_IP 7
+java -ea -cp $CP:. test.TestRunner $CATALOG_IP $UI_IP $ORDER_IP 7
+
+cd ../
 
 echo "Restarting the stopped catalog-server replica.."
-cd ../
 ./recover-catalog-server.sh
 
-echo -e "Waiting for some time to ensure that restarted replica is added to load-balancer..\n"
+sleep 2
+
+echo "Restarting the stopped order-server replica.."
+./recover-order-server.sh
+
+echo -e "Waiting for some time to ensure that restarted replicas are added to the load-balancers..\n"
 sleep 20
 
 echo -e "Clearing cached responses from UIServer again..\n"
@@ -47,4 +56,4 @@ echo "Checking search/lookup/buy are redirected to the restarted replica.."
 java -ea -cp $CP:. test.TestRunner $CATALOG_IP $UI_IP 8
 
 # test-case #2: thorough sanity tests on /multibuy and /update endpoints
-java -ea -cp $CP:. test.TestRunner $CATALOG_IP $UI_IP 9
+java -ea -cp $CP:. test.TestRunner $CATALOG_IP $UI_IP $ORDER_IP 9

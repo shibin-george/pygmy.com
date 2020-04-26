@@ -210,13 +210,14 @@ public class FaultToleranceTests {
         }
     }
 
-    public static void testMultiBuy(String catalogServerURL, String uiServerURL, boolean bothAlive)
+    public static void testMultiBuy(String catalogServerURL, String uiServerURL,
+            String orderServerURL, boolean bothAlive)
             throws JSONException, IOException {
 
         String[] bookIds = { "xenart177", "67720min", "rpcdummies", "impstudent", "project3",
                 "pioneer", "whytheory" };
 
-        boolean servedByOtherReplica = false;
+        boolean servedByOtherCatalogReplica = false, servedByOtherOrderReplica = false;
 
         for (String bookId : bookIds) {
 
@@ -254,17 +255,26 @@ public class FaultToleranceTests {
                     HttpRESTUtils.httpPostJSON(uiServerURL + "/multibuy", buyRequest,
                             0, Config.DEBUG));
 
+            String catalogServedBy = buyResponse.getString("ServedByCatalogServer");
+            String orderServedBy = buyResponse.getString("ServedByOrderServer");
+
             if (!bothAlive) {
-                if (buyResponse.getString("ServedByCatalogServer").startsWith(catalogServerURL))
-                    System.out.println(
-                            "This buy request was served by " + catalogServerURL
-                                    + " as was expected!");
+                assert catalogServedBy.startsWith(catalogServerURL);
+                assert orderServedBy.startsWith(orderServerURL);
+                System.out.println(
+                        "This buy request was served by:" +
+                                "\n OrderServer: " + orderServedBy +
+                                "\n CatalogServer: " + catalogServedBy);
             } else {
-                String servedBy = buyResponse.getString("ServedByCatalogServer");
-                if (!servedBy.startsWith(catalogServerURL)) {
-                    System.out.println(
-                            "This buy request was served by " + servedBy);
-                    servedByOtherReplica = true;
+                System.out.println(
+                        "This buy request was served by:" +
+                                "\n OrderServer: " + orderServedBy +
+                                "\n CatalogServer: " + catalogServedBy);
+                if (!catalogServedBy.startsWith(catalogServerURL)) {
+                    servedByOtherCatalogReplica = true;
+                }
+                if (!orderServedBy.startsWith(orderServerURL)) {
+                    servedByOtherOrderReplica = true;
                 }
             }
 
@@ -275,9 +285,10 @@ public class FaultToleranceTests {
         }
 
         if (bothAlive) {
-            assert servedByOtherReplica == true;
+            assert servedByOtherCatalogReplica == true;
+            assert servedByOtherOrderReplica == true;
             System.out.println(
-                    "The restarted replica is up and running and is processing requests!!");
+                    "The restarted replicas are up and running and are already processing requests!!");
         }
     }
 

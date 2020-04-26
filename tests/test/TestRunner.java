@@ -10,7 +10,7 @@ import config.Config;
 public class TestRunner {
 
     static Scanner scanner = null;
-    static String uiServerURL = null, catalogServerURL = null;
+    static String uiServerURL = null, catalogServerURL = null, orderServerURL = null;
 
     public static void main(String[] args) {
 
@@ -32,22 +32,27 @@ public class TestRunner {
             catalogServerURL = "http://" + catalogServerURL;
         }
 
-        if (args.length == 2) {
-            System.out.println("Entering interactive mode");
-            interactiveMode();
-        } else if (args.length == 3) {
-            try {
-                invokeTest(Integer.parseInt(args[2]));
-            } catch (NumberFormatException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (JSONException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+        int testArgNum = 2;
+
+        if (args.length > 3) {
+            orderServerURL = args[2] + ":" + Config.ORDER_SERVER_PORT;
+            if (!orderServerURL.startsWith("http://")) {
+                orderServerURL = "http://" + orderServerURL;
             }
+            testArgNum = 3;
+        }
+
+        try {
+            invokeTest(Integer.parseInt(args[testArgNum]));
+        } catch (NumberFormatException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
@@ -88,7 +93,7 @@ public class TestRunner {
             break;
         case 7:
             showBanner("");
-            FaultToleranceTests.testMultiBuy(catalogServerURL, uiServerURL, false);
+            FaultToleranceTests.testMultiBuy(catalogServerURL, uiServerURL, orderServerURL, false);
             showSuccessBanner("");
             break;
         case 8:
@@ -98,7 +103,7 @@ public class TestRunner {
             break;
         case 9:
             showBanner("");
-            FaultToleranceTests.testMultiBuy(catalogServerURL, uiServerURL, true);
+            FaultToleranceTests.testMultiBuy(catalogServerURL, uiServerURL, orderServerURL, true);
             showSuccessBanner("");
             break;
         case 10:
@@ -134,7 +139,4 @@ public class TestRunner {
         }
     }
 
-    private static void interactiveMode() {
-
-    }
 }
