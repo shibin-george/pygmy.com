@@ -1,3 +1,9 @@
-# 677 Lab 2
+# The new pygmy.com
 
-This directory should include test code for your project. Include test code for a minimum of 5 test cases. Write a very short description of how to run your tests.
+The following tests/experiments are newly added:
+
+* Cache latency/consistency tests: https://github.com/ds-umass/lab-3-lab-3-george-raghavan/blob/master/tests/test/CacheTests.java
+* Tests to verify Fault-tolerance and recovery: https://github.com/ds-umass/lab-3-lab-3-george-raghavan/blob/master/tests/test/FaultToleranceTests.java
+
+To see how to run these tests, check out the "Running experiments" subsection of "How to run?" section of the [Design Document](https://github.com/ds-umass/lab-3-lab-3-george-raghavan/blob/master/docs/DesignDoc.pdf)
+
