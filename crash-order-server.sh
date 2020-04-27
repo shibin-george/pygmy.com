@@ -14,7 +14,7 @@ ORDER_IP2="128.119.243.168"
 
 # stop jetty server
 curl -m 5 -s -X GET http://$ORDER_IP2:35660/stop > /dev/null
-
+sleep 3
 ssh $USER@$ORDER_SERVER2 "cd $PWD && ./kill-order-server.sh"
 echo -e "Crashed Order Server running @ $ORDER_SERVER2 \n"
 sleep 5

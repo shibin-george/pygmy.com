@@ -14,7 +14,7 @@ ORDER_IP2="128.119.243.168"
 
 # stop jetty server
 curl -m 5 -s -X GET http://$CATALOG_IP2:35640/stop > /dev/null
-
+sleep 3
 ssh $USER@$CATALOG_SERVER2 "cd $PWD && ./kill-catalog-server.sh"
 echo -e "Crashed Catalog Server running @ $CATALOG_SERVER2\n"
 sleep 5
