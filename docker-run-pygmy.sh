@@ -10,9 +10,11 @@ docker pull shibingeorge/pygmy.com:catalogserver
 docker pull shibingeorge/pygmy.com:uiserver
 docker pull shibingeorge/pygmy.com:userinterface
 
+# create subnet mask
 docker network rm mynet
 docker network create --subnet=172.18.0.0/16 mynet
 
+# assign IP addresses within this subnet
 UI_IP="172.18.0.22"
 CATALOG_IP1="172.18.0.23"
 CATALOG_IP2="172.18.0.24"
