@@ -1,0 +1,935 @@
+UIServer : tid=1 : 04-27-2020; 13:16:13.985 :: UI Server, running on http://128.119.243.168:35650...
+[main] INFO org.cache2k.core.Cache2kCoreProviderImpl - cache2k starting. version=1.2.4.Final
+[Thread-1] INFO org.eclipse.jetty.util.log - Logging initialized @520ms to org.eclipse.jetty.util.log.Slf4jLog
+[Thread-1] INFO spark.embeddedserver.jetty.EmbeddedJettyServer - == Spark has ignited ...
+[Thread-1] INFO spark.embeddedserver.jetty.EmbeddedJettyServer - >> Listening on 0.0.0.0:35650
+[Thread-1] INFO org.eclipse.jetty.server.Server - jetty-9.4.18.v20190429; built: 2019-04-29T20:42:08.989Z; git: e1bc35120a6617ee3df052294e433f3a25ce7097; jvm 1.8.0_252-8u252-b09-1~16.04-b09
+[Thread-1] INFO org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[Thread-1] INFO org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[Thread-1] INFO org.eclipse.jetty.server.session - node0 Scavenging every 660000ms
+[Thread-1] INFO org.eclipse.jetty.server.AbstractConnector - Started ServerConnector@338d7f02{HTTP/1.1,[http/1.1]}{0.0.0.0:35650}
+[Thread-1] INFO org.eclipse.jetty.server.Server - Started @681ms
+LoadBalancer : tid=32 : 04-27-2020; 13:16:18.401 :: Adding server: http://128.119.243.175:35640 to the load-balancer!
+UIServer : tid=32 : 04-27-2020; 13:16:18.402 :: Token handed out to http://128.119.243.175:35640
+LoadBalancer : tid=25 : 04-27-2020; 13:16:20.332 :: Adding server: http://128.119.243.147:35640 to the load-balancer!
+LoadBalancer : tid=31 : 04-27-2020; 13:16:21.560 :: Adding server: http://128.119.243.175:35660 to the load-balancer!
+LoadBalancer : tid=32 : 04-27-2020; 13:16:23.544 :: Adding server: http://128.119.243.168:35660 to the load-balancer!
+UIServer : tid=51 : 04-27-2020; 13:26:24.534 :: Asking CatalogServer to search for books on topic: graduate-school
+LoadBalancer : tid=51 : 04-27-2020; 13:26:24.535 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=102 : 04-27-2020; 13:26:24.554 :: Marking Job: 952423686-1588008384534-51 as complete!
+UIServer : tid=102 : 04-27-2020; 13:26:32.573 :: Asking OrderServer to buy book: pioneer
+LoadBalancer : tid=102 : 04-27-2020; 13:26:32.573 :: Forwarding request to http://128.119.243.175:35660
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:26:34.798 :: Marking Job: OD541651815-1588008392573-102 as complete!
+UIServer : tid=196 : 04-27-2020; 13:43:26.757 :: Asking CatalogServer to search for book: xenart177
+LoadBalancer : tid=196 : 04-27-2020; 13:43:26.757 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=221 : 04-27-2020; 13:43:26.774 :: Marking Job: 1663611052-1588009406757-196 as complete!
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:43:26.884 :: Result for this query is already in Cache!
+UIServer : tid=160 : 04-27-2020; 13:43:26.890 :: Asking OrderServer to buy book: xenart177
+LoadBalancer : tid=160 : 04-27-2020; 13:43:26.890 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:43:27.999 :: Removing book: xenart177 from cache!
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:43:29.108 :: Marking Job: OD1417571525-1588009406889-160 as complete!
+UIServer : tid=196 : 04-27-2020; 13:43:30.209 :: Asking CatalogServer to search for book: xenart177
+LoadBalancer : tid=196 : 04-27-2020; 13:43:30.209 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=221 : 04-27-2020; 13:43:30.217 :: Marking Job: 869874301-1588009410209-196 as complete!
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:43:30.418 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:43:30.420 :: Result for this query is already in Cache!
+UIServer : tid=81 : 04-27-2020; 13:43:30.422 :: Asking OrderServer to buy book: xenart177
+LoadBalancer : tid=81 : 04-27-2020; 13:43:30.422 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=221 : 04-27-2020; 13:43:31.529 :: Removing book: xenart177 from cache!
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:43:32.638 :: Marking Job: OD1846480874-1588009410422-81 as complete!
+UIServer : tid=196 : 04-27-2020; 13:43:33.740 :: Asking CatalogServer to search for book: xenart177
+LoadBalancer : tid=196 : 04-27-2020; 13:43:33.740 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=221 : 04-27-2020; 13:43:33.744 :: Marking Job: 357712250-1588009413740-196 as complete!
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:43:33.946 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:43:33.948 :: Result for this query is already in Cache!
+UIServer : tid=160 : 04-27-2020; 13:43:33.950 :: Asking OrderServer to buy book: xenart177
+LoadBalancer : tid=160 : 04-27-2020; 13:43:33.950 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=221 : 04-27-2020; 13:43:35.054 :: Removing book: xenart177 from cache!
+HeartbeatMonitor : tid=196 : 04-27-2020; 13:43:36.159 :: Marking Job: OD821752379-1588009413949-160 as complete!
+UIServer : tid=212 : 04-27-2020; 13:43:37.261 :: Asking CatalogServer to search for book: xenart177
+LoadBalancer : tid=212 : 04-27-2020; 13:43:37.262 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:43:37.266 :: Marking Job: 1072725193-1588009417261-212 as complete!
+FrontEndCacheManager : tid=221 : 04-27-2020; 13:43:37.467 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=196 : 04-27-2020; 13:43:37.469 :: Result for this query is already in Cache!
+UIServer : tid=220 : 04-27-2020; 13:43:37.471 :: Asking OrderServer to buy book: xenart177
+LoadBalancer : tid=220 : 04-27-2020; 13:43:37.471 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:43:38.576 :: Removing book: xenart177 from cache!
+HeartbeatMonitor : tid=212 : 04-27-2020; 13:43:39.682 :: Marking Job: OD641533055-1588009417471-220 as complete!
+UIServer : tid=221 : 04-27-2020; 13:43:40.783 :: Asking CatalogServer to search for book: xenart177
+LoadBalancer : tid=221 : 04-27-2020; 13:43:40.783 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=196 : 04-27-2020; 13:43:40.789 :: Marking Job: 1672807919-1588009420783-221 as complete!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:43:40.990 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:43:40.992 :: Result for this query is already in Cache!
+UIServer : tid=220 : 04-27-2020; 13:43:40.994 :: Asking OrderServer to buy book: xenart177
+LoadBalancer : tid=220 : 04-27-2020; 13:43:40.994 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:43:42.099 :: Removing book: xenart177 from cache!
+HeartbeatMonitor : tid=212 : 04-27-2020; 13:43:43.205 :: Marking Job: OD1232390768-1588009420994-220 as complete!
+UIServer : tid=81 : 04-27-2020; 13:43:44.306 :: Asking CatalogServer to search for book: xenart177
+LoadBalancer : tid=81 : 04-27-2020; 13:43:44.306 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:43:44.310 :: Marking Job: 1477909080-1588009424306-81 as complete!
+UIServer : tid=221 : 04-27-2020; 13:43:44.512 :: Asking CatalogServer to search for book: 67720min
+LoadBalancer : tid=221 : 04-27-2020; 13:43:44.512 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=212 : 04-27-2020; 13:43:44.516 :: Marking Job: 61051657-1588009424512-221 as complete!
+FrontEndCacheManager : tid=196 : 04-27-2020; 13:43:44.718 :: Result for this query is already in Cache!
+UIServer : tid=220 : 04-27-2020; 13:43:44.720 :: Asking OrderServer to buy book: 67720min
+LoadBalancer : tid=220 : 04-27-2020; 13:43:44.720 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:43:45.825 :: Removing book: 67720min from cache!
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:43:46.930 :: Marking Job: OD1038870572-1588009424720-220 as complete!
+UIServer : tid=212 : 04-27-2020; 13:43:48.032 :: Asking CatalogServer to search for book: 67720min
+LoadBalancer : tid=212 : 04-27-2020; 13:43:48.032 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=221 : 04-27-2020; 13:43:48.036 :: Marking Job: 1736390086-1588009428032-212 as complete!
+FrontEndCacheManager : tid=196 : 04-27-2020; 13:43:48.238 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:43:48.239 :: Result for this query is already in Cache!
+UIServer : tid=81 : 04-27-2020; 13:43:48.241 :: Asking OrderServer to buy book: 67720min
+LoadBalancer : tid=81 : 04-27-2020; 13:43:48.241 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:43:49.347 :: Removing book: 67720min from cache!
+HeartbeatMonitor : tid=212 : 04-27-2020; 13:43:50.452 :: Marking Job: OD1324429039-1588009428241-81 as complete!
+UIServer : tid=160 : 04-27-2020; 13:43:51.554 :: Asking CatalogServer to search for book: 67720min
+LoadBalancer : tid=160 : 04-27-2020; 13:43:51.554 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=221 : 04-27-2020; 13:43:51.559 :: Marking Job: 764675436-1588009431554-160 as complete!
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:43:51.661 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:43:51.662 :: Result for this query is already in Cache!
+UIServer : tid=196 : 04-27-2020; 13:43:51.664 :: Asking OrderServer to buy book: 67720min
+LoadBalancer : tid=196 : 04-27-2020; 13:43:51.664 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:43:52.768 :: Removing book: 67720min from cache!
+HeartbeatMonitor : tid=220 : 04-27-2020; 13:43:53.873 :: Marking Job: OD349834373-1588009431664-196 as complete!
+UIServer : tid=221 : 04-27-2020; 13:43:54.975 :: Asking CatalogServer to search for book: 67720min
+LoadBalancer : tid=221 : 04-27-2020; 13:43:54.975 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:43:54.978 :: Marking Job: 2024894377-1588009434975-221 as complete!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:43:55.180 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:43:55.182 :: Result for this query is already in Cache!
+UIServer : tid=212 : 04-27-2020; 13:43:55.184 :: Asking OrderServer to buy book: 67720min
+LoadBalancer : tid=212 : 04-27-2020; 13:43:55.184 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=196 : 04-27-2020; 13:43:56.288 :: Removing book: 67720min from cache!
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:43:57.393 :: Marking Job: OD375808228-1588009435184-212 as complete!
+UIServer : tid=221 : 04-27-2020; 13:43:58.494 :: Asking CatalogServer to search for book: 67720min
+LoadBalancer : tid=221 : 04-27-2020; 13:43:58.495 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=220 : 04-27-2020; 13:43:58.499 :: Marking Job: 1258398327-1588009438494-221 as complete!
+FrontEndCacheManager : tid=196 : 04-27-2020; 13:43:58.700 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:43:58.701 :: Result for this query is already in Cache!
+UIServer : tid=160 : 04-27-2020; 13:43:58.703 :: Asking OrderServer to buy book: 67720min
+LoadBalancer : tid=160 : 04-27-2020; 13:43:58.703 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:43:59.808 :: Removing book: 67720min from cache!
+HeartbeatMonitor : tid=196 : 04-27-2020; 13:44:00.914 :: Marking Job: OD1775971928-1588009438703-160 as complete!
+UIServer : tid=221 : 04-27-2020; 13:44:02.015 :: Asking CatalogServer to search for book: 67720min
+LoadBalancer : tid=221 : 04-27-2020; 13:44:02.015 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=212 : 04-27-2020; 13:44:02.019 :: Marking Job: 1420123077-1588009442015-221 as complete!
+UIServer : tid=196 : 04-27-2020; 13:44:02.221 :: Asking CatalogServer to search for book: rpcdummies
+LoadBalancer : tid=196 : 04-27-2020; 13:44:02.221 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:44:02.226 :: Marking Job: 377326073-1588009442221-196 as complete!
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:44:02.328 :: Result for this query is already in Cache!
+UIServer : tid=212 : 04-27-2020; 13:44:02.329 :: Asking OrderServer to buy book: rpcdummies
+LoadBalancer : tid=212 : 04-27-2020; 13:44:02.329 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:44:03.434 :: Removing book: rpcdummies from cache!
+HeartbeatMonitor : tid=196 : 04-27-2020; 13:44:04.540 :: Marking Job: OD214442305-1588009442329-212 as complete!
+UIServer : tid=160 : 04-27-2020; 13:44:05.640 :: Asking CatalogServer to search for book: rpcdummies
+LoadBalancer : tid=160 : 04-27-2020; 13:44:05.641 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=220 : 04-27-2020; 13:44:05.645 :: Marking Job: 883977014-1588009445640-160 as complete!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:44:05.747 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=196 : 04-27-2020; 13:44:05.748 :: Result for this query is already in Cache!
+UIServer : tid=212 : 04-27-2020; 13:44:05.750 :: Asking OrderServer to buy book: rpcdummies
+LoadBalancer : tid=212 : 04-27-2020; 13:44:05.750 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:44:06.854 :: Removing book: rpcdummies from cache!
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:44:07.960 :: Marking Job: OD1234015711-1588009445750-212 as complete!
+UIServer : tid=196 : 04-27-2020; 13:44:09.061 :: Asking CatalogServer to search for book: rpcdummies
+LoadBalancer : tid=196 : 04-27-2020; 13:44:09.062 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:44:09.067 :: Marking Job: 1607871769-1588009449061-196 as complete!
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:44:09.268 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=224 : 04-27-2020; 13:44:09.269 :: Result for this query is already in Cache!
+UIServer : tid=81 : 04-27-2020; 13:44:09.271 :: Asking OrderServer to buy book: rpcdummies
+LoadBalancer : tid=81 : 04-27-2020; 13:44:09.271 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:44:10.375 :: Removing book: rpcdummies from cache!
+HeartbeatMonitor : tid=220 : 04-27-2020; 13:44:11.481 :: Marking Job: OD1331188323-1588009449271-81 as complete!
+UIServer : tid=212 : 04-27-2020; 13:44:12.582 :: Asking CatalogServer to search for book: rpcdummies
+LoadBalancer : tid=212 : 04-27-2020; 13:44:12.582 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:44:12.585 :: Marking Job: 562633624-1588009452582-212 as complete!
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:44:12.787 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=224 : 04-27-2020; 13:44:12.788 :: Result for this query is already in Cache!
+UIServer : tid=196 : 04-27-2020; 13:44:12.790 :: Asking OrderServer to buy book: rpcdummies
+LoadBalancer : tid=196 : 04-27-2020; 13:44:12.790 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:44:13.894 :: Removing book: rpcdummies from cache!
+HeartbeatMonitor : tid=212 : 04-27-2020; 13:44:14.999 :: Marking Job: OD1024268018-1588009452790-196 as complete!
+UIServer : tid=220 : 04-27-2020; 13:44:15.101 :: Asking CatalogServer to search for book: rpcdummies
+LoadBalancer : tid=220 : 04-27-2020; 13:44:15.101 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=224 : 04-27-2020; 13:44:15.104 :: Marking Job: 2039204389-1588009455101-220 as complete!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:44:15.306 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:44:15.307 :: Result for this query is already in Cache!
+UIServer : tid=212 : 04-27-2020; 13:44:15.309 :: Asking OrderServer to buy book: rpcdummies
+LoadBalancer : tid=212 : 04-27-2020; 13:44:15.309 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=196 : 04-27-2020; 13:44:16.413 :: Removing book: rpcdummies from cache!
+HeartbeatMonitor : tid=224 : 04-27-2020; 13:44:17.518 :: Marking Job: OD1812391105-1588009455309-212 as complete!
+UIServer : tid=220 : 04-27-2020; 13:44:18.619 :: Asking CatalogServer to search for book: rpcdummies
+LoadBalancer : tid=220 : 04-27-2020; 13:44:18.619 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:44:18.624 :: Marking Job: 399917059-1588009458619-220 as complete!
+UIServer : tid=196 : 04-27-2020; 13:44:18.825 :: Asking CatalogServer to search for book: impstudent
+LoadBalancer : tid=196 : 04-27-2020; 13:44:18.825 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:44:18.829 :: Marking Job: 1204118251-1588009458825-196 as complete!
+FrontEndCacheManager : tid=224 : 04-27-2020; 13:44:19.030 :: Result for this query is already in Cache!
+UIServer : tid=212 : 04-27-2020; 13:44:19.032 :: Asking OrderServer to buy book: impstudent
+LoadBalancer : tid=212 : 04-27-2020; 13:44:19.032 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:44:20.137 :: Removing book: impstudent from cache!
+HeartbeatMonitor : tid=196 : 04-27-2020; 13:44:21.242 :: Marking Job: OD1753374836-1588009459032-212 as complete!
+UIServer : tid=81 : 04-27-2020; 13:44:22.343 :: Asking CatalogServer to search for book: impstudent
+LoadBalancer : tid=81 : 04-27-2020; 13:44:22.344 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=220 : 04-27-2020; 13:44:22.347 :: Marking Job: 109811031-1588009462343-81 as complete!
+FrontEndCacheManager : tid=196 : 04-27-2020; 13:44:22.549 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=224 : 04-27-2020; 13:44:22.550 :: Result for this query is already in Cache!
+UIServer : tid=160 : 04-27-2020; 13:44:22.552 :: Asking OrderServer to buy book: impstudent
+LoadBalancer : tid=160 : 04-27-2020; 13:44:22.552 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:44:23.655 :: Removing book: impstudent from cache!
+HeartbeatMonitor : tid=196 : 04-27-2020; 13:44:24.760 :: Marking Job: OD891273069-1588009462551-160 as complete!
+UIServer : tid=220 : 04-27-2020; 13:44:25.861 :: Asking CatalogServer to search for book: impstudent
+LoadBalancer : tid=220 : 04-27-2020; 13:44:25.861 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=224 : 04-27-2020; 13:44:25.866 :: Marking Job: 62613425-1588009465861-220 as complete!
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:44:26.067 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:44:26.069 :: Result for this query is already in Cache!
+UIServer : tid=196 : 04-27-2020; 13:44:26.070 :: Asking OrderServer to buy book: impstudent
+LoadBalancer : tid=196 : 04-27-2020; 13:44:26.070 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:44:27.194 :: Removing book: impstudent from cache!
+HeartbeatMonitor : tid=220 : 04-27-2020; 13:44:28.301 :: Marking Job: OD379269759-1588009466070-196 as complete!
+UIServer : tid=224 : 04-27-2020; 13:44:29.402 :: Asking CatalogServer to search for book: impstudent
+LoadBalancer : tid=224 : 04-27-2020; 13:44:29.402 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:44:29.407 :: Marking Job: 1593525317-1588009469402-224 as complete!
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:44:29.608 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:44:29.610 :: Result for this query is already in Cache!
+UIServer : tid=196 : 04-27-2020; 13:44:29.611 :: Asking OrderServer to buy book: impstudent
+LoadBalancer : tid=196 : 04-27-2020; 13:44:29.611 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:44:30.715 :: Removing book: impstudent from cache!
+HeartbeatMonitor : tid=220 : 04-27-2020; 13:44:31.822 :: Marking Job: OD2057689213-1588009469611-196 as complete!
+UIServer : tid=160 : 04-27-2020; 13:44:32.923 :: Asking CatalogServer to search for book: impstudent
+LoadBalancer : tid=160 : 04-27-2020; 13:44:32.923 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:44:32.927 :: Marking Job: 1221422293-1588009472923-160 as complete!
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:44:33.128 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:44:33.129 :: Result for this query is already in Cache!
+UIServer : tid=224 : 04-27-2020; 13:44:33.131 :: Asking OrderServer to buy book: impstudent
+LoadBalancer : tid=224 : 04-27-2020; 13:44:33.131 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:44:34.235 :: Removing book: impstudent from cache!
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:44:35.340 :: Marking Job: OD1704359186-1588009473131-224 as complete!
+UIServer : tid=220 : 04-27-2020; 13:44:35.441 :: Asking CatalogServer to search for book: impstudent
+LoadBalancer : tid=220 : 04-27-2020; 13:44:35.442 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=212 : 04-27-2020; 13:44:35.445 :: Marking Job: 957855846-1588009475441-220 as complete!
+UIServer : tid=196 : 04-27-2020; 13:44:35.646 :: Asking CatalogServer to search for book: project3
+LoadBalancer : tid=196 : 04-27-2020; 13:44:35.646 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:44:35.650 :: Marking Job: 1976537652-1588009475646-196 as complete!
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:44:35.851 :: Result for this query is already in Cache!
+UIServer : tid=224 : 04-27-2020; 13:44:35.852 :: Asking OrderServer to buy book: project3
+LoadBalancer : tid=224 : 04-27-2020; 13:44:35.853 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:44:36.956 :: Removing book: project3 from cache!
+HeartbeatMonitor : tid=220 : 04-27-2020; 13:44:38.060 :: Marking Job: OD638560688-1588009475852-224 as complete!
+UIServer : tid=81 : 04-27-2020; 13:44:39.162 :: Asking CatalogServer to search for book: project3
+LoadBalancer : tid=81 : 04-27-2020; 13:44:39.162 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=196 : 04-27-2020; 13:44:39.165 :: Marking Job: 49066288-1588009479162-81 as complete!
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:44:39.367 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:44:39.368 :: Result for this query is already in Cache!
+UIServer : tid=220 : 04-27-2020; 13:44:39.369 :: Asking OrderServer to buy book: project3
+LoadBalancer : tid=220 : 04-27-2020; 13:44:39.369 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=224 : 04-27-2020; 13:44:40.473 :: Removing book: project3 from cache!
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:44:41.579 :: Marking Job: OD371454419-1588009479369-220 as complete!
+UIServer : tid=224 : 04-27-2020; 13:44:42.681 :: Asking CatalogServer to search for book: project3
+LoadBalancer : tid=224 : 04-27-2020; 13:44:42.681 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=196 : 04-27-2020; 13:44:42.685 :: Marking Job: 883374352-1588009482680-224 as complete!
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:44:42.886 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:44:42.887 :: Result for this query is already in Cache!
+UIServer : tid=81 : 04-27-2020; 13:44:42.889 :: Asking OrderServer to buy book: project3
+LoadBalancer : tid=81 : 04-27-2020; 13:44:42.889 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=224 : 04-27-2020; 13:44:43.993 :: Removing book: project3 from cache!
+HeartbeatMonitor : tid=220 : 04-27-2020; 13:44:45.098 :: Marking Job: OD1550207467-1588009482889-81 as complete!
+UIServer : tid=160 : 04-27-2020; 13:44:46.199 :: Asking CatalogServer to search for book: project3
+LoadBalancer : tid=160 : 04-27-2020; 13:44:46.199 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=196 : 04-27-2020; 13:44:46.205 :: Marking Job: 1782156524-1588009486199-160 as complete!
+FrontEndCacheManager : tid=224 : 04-27-2020; 13:44:46.405 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:44:46.406 :: Result for this query is already in Cache!
+UIServer : tid=220 : 04-27-2020; 13:44:46.408 :: Asking OrderServer to buy book: project3
+LoadBalancer : tid=220 : 04-27-2020; 13:44:46.408 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:44:47.513 :: Removing book: project3 from cache!
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:44:48.619 :: Marking Job: OD1814237945-1588009486408-220 as complete!
+UIServer : tid=224 : 04-27-2020; 13:44:49.720 :: Asking CatalogServer to search for book: project3
+LoadBalancer : tid=224 : 04-27-2020; 13:44:49.720 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=212 : 04-27-2020; 13:44:49.725 :: Marking Job: 1720862533-1588009489720-224 as complete!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:44:49.925 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:44:49.927 :: Result for this query is already in Cache!
+UIServer : tid=196 : 04-27-2020; 13:44:49.928 :: Asking OrderServer to buy book: project3
+LoadBalancer : tid=196 : 04-27-2020; 13:44:49.928 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:44:51.031 :: Removing book: project3 from cache!
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:44:52.136 :: Marking Job: OD80282979-1588009489928-196 as complete!
+UIServer : tid=212 : 04-27-2020; 13:44:53.237 :: Asking CatalogServer to search for book: project3
+LoadBalancer : tid=212 : 04-27-2020; 13:44:53.238 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:44:53.241 :: Marking Job: 1226696962-1588009493237-212 as complete!
+UIServer : tid=224 : 04-27-2020; 13:44:53.442 :: Asking CatalogServer to search for book: pioneer
+LoadBalancer : tid=224 : 04-27-2020; 13:44:53.443 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:44:53.446 :: Marking Job: 820633862-1588009493442-224 as complete!
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:44:53.548 :: Result for this query is already in Cache!
+UIServer : tid=196 : 04-27-2020; 13:44:53.549 :: Asking OrderServer to buy book: pioneer
+LoadBalancer : tid=196 : 04-27-2020; 13:44:53.549 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:44:54.653 :: Removing book: pioneer from cache!
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:44:55.758 :: Marking Job: OD1304790505-1588009493549-196 as complete!
+UIServer : tid=224 : 04-27-2020; 13:44:56.859 :: Asking CatalogServer to search for book: pioneer
+LoadBalancer : tid=224 : 04-27-2020; 13:44:56.860 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=220 : 04-27-2020; 13:44:56.863 :: Marking Job: 1411529284-1588009496859-224 as complete!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:44:56.965 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:44:56.966 :: Result for this query is already in Cache!
+UIServer : tid=160 : 04-27-2020; 13:44:56.967 :: Asking OrderServer to buy book: pioneer
+LoadBalancer : tid=160 : 04-27-2020; 13:44:56.967 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=196 : 04-27-2020; 13:44:58.072 :: Removing book: pioneer from cache!
+HeartbeatMonitor : tid=224 : 04-27-2020; 13:44:59.178 :: Marking Job: OD1356215189-1588009496967-160 as complete!
+UIServer : tid=81 : 04-27-2020; 13:45:00.278 :: Asking CatalogServer to search for book: pioneer
+LoadBalancer : tid=81 : 04-27-2020; 13:45:00.279 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=220 : 04-27-2020; 13:45:00.283 :: Marking Job: 1829060706-1588009500278-81 as complete!
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:45:00.484 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=196 : 04-27-2020; 13:45:00.486 :: Result for this query is already in Cache!
+UIServer : tid=224 : 04-27-2020; 13:45:00.487 :: Asking OrderServer to buy book: pioneer
+LoadBalancer : tid=224 : 04-27-2020; 13:45:00.487 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:45:01.591 :: Removing book: pioneer from cache!
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:45:02.697 :: Marking Job: OD1150400699-1588009500487-224 as complete!
+UIServer : tid=81 : 04-27-2020; 13:45:03.798 :: Asking CatalogServer to search for book: pioneer
+LoadBalancer : tid=81 : 04-27-2020; 13:45:03.798 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=220 : 04-27-2020; 13:45:03.801 :: Marking Job: 713666410-1588009503797-81 as complete!
+FrontEndCacheManager : tid=196 : 04-27-2020; 13:45:04.002 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:45:04.003 :: Result for this query is already in Cache!
+UIServer : tid=224 : 04-27-2020; 13:45:04.004 :: Asking OrderServer to buy book: pioneer
+LoadBalancer : tid=224 : 04-27-2020; 13:45:04.004 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:45:05.107 :: Removing book: pioneer from cache!
+HeartbeatMonitor : tid=212 : 04-27-2020; 13:45:06.212 :: Marking Job: OD990875902-1588009504004-224 as complete!
+UIServer : tid=81 : 04-27-2020; 13:45:07.313 :: Asking CatalogServer to search for book: pioneer
+LoadBalancer : tid=81 : 04-27-2020; 13:45:07.313 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:45:07.319 :: Marking Job: 403448781-1588009507313-81 as complete!
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:45:07.520 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=196 : 04-27-2020; 13:45:07.521 :: Result for this query is already in Cache!
+UIServer : tid=212 : 04-27-2020; 13:45:07.522 :: Asking OrderServer to buy book: pioneer
+LoadBalancer : tid=212 : 04-27-2020; 13:45:07.522 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=224 : 04-27-2020; 13:45:08.627 :: Removing book: pioneer from cache!
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:45:09.732 :: Marking Job: OD292880275-1588009507522-212 as complete!
+UIServer : tid=220 : 04-27-2020; 13:45:10.832 :: Asking CatalogServer to search for book: pioneer
+LoadBalancer : tid=220 : 04-27-2020; 13:45:10.832 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:45:10.837 :: Marking Job: 645948735-1588009510832-220 as complete!
+UIServer : tid=225 : 04-27-2020; 13:45:11.038 :: Asking CatalogServer to search for book: whytheory
+LoadBalancer : tid=225 : 04-27-2020; 13:45:11.038 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:45:11.041 :: Marking Job: 1636344172-1588009511038-225 as complete!
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:45:11.243 :: Result for this query is already in Cache!
+UIServer : tid=160 : 04-27-2020; 13:45:11.244 :: Asking OrderServer to buy book: whytheory
+LoadBalancer : tid=160 : 04-27-2020; 13:45:11.244 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:45:12.348 :: Removing book: whytheory from cache!
+HeartbeatMonitor : tid=212 : 04-27-2020; 13:45:13.454 :: Marking Job: OD1407505620-1588009511244-160 as complete!
+UIServer : tid=225 : 04-27-2020; 13:45:14.555 :: Asking CatalogServer to search for book: whytheory
+LoadBalancer : tid=225 : 04-27-2020; 13:45:14.555 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=220 : 04-27-2020; 13:45:14.558 :: Marking Job: 1867465517-1588009514555-225 as complete!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:45:14.760 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=212 : 04-27-2020; 13:45:14.761 :: Result for this query is already in Cache!
+UIServer : tid=196 : 04-27-2020; 13:45:14.762 :: Asking OrderServer to buy book: whytheory
+LoadBalancer : tid=196 : 04-27-2020; 13:45:14.762 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:45:15.865 :: Removing book: whytheory from cache!
+HeartbeatMonitor : tid=220 : 04-27-2020; 13:45:16.970 :: Marking Job: OD1751565446-1588009514762-196 as complete!
+UIServer : tid=225 : 04-27-2020; 13:45:18.072 :: Asking CatalogServer to search for book: whytheory
+LoadBalancer : tid=225 : 04-27-2020; 13:45:18.072 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=212 : 04-27-2020; 13:45:18.080 :: Marking Job: 1802553884-1588009518072-225 as complete!
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:45:18.281 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=220 : 04-27-2020; 13:45:18.282 :: Result for this query is already in Cache!
+UIServer : tid=81 : 04-27-2020; 13:45:18.283 :: Asking OrderServer to buy book: whytheory
+LoadBalancer : tid=81 : 04-27-2020; 13:45:18.284 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=196 : 04-27-2020; 13:45:19.388 :: Removing book: whytheory from cache!
+HeartbeatMonitor : tid=225 : 04-27-2020; 13:45:20.492 :: Marking Job: OD609795640-1588009518283-81 as complete!
+UIServer : tid=220 : 04-27-2020; 13:45:21.593 :: Asking CatalogServer to search for book: whytheory
+LoadBalancer : tid=220 : 04-27-2020; 13:45:21.593 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=212 : 04-27-2020; 13:45:21.597 :: Marking Job: 152562307-1588009521593-220 as complete!
+FrontEndCacheManager : tid=196 : 04-27-2020; 13:45:21.799 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=225 : 04-27-2020; 13:45:21.800 :: Result for this query is already in Cache!
+UIServer : tid=160 : 04-27-2020; 13:45:21.801 :: Asking OrderServer to buy book: whytheory
+LoadBalancer : tid=160 : 04-27-2020; 13:45:21.801 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:45:22.905 :: Removing book: whytheory from cache!
+HeartbeatMonitor : tid=225 : 04-27-2020; 13:45:24.010 :: Marking Job: OD1741100761-1588009521801-160 as complete!
+UIServer : tid=212 : 04-27-2020; 13:45:24.113 :: Asking CatalogServer to search for book: whytheory
+LoadBalancer : tid=212 : 04-27-2020; 13:45:24.113 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=220 : 04-27-2020; 13:45:24.117 :: Marking Job: 1241415260-1588009524113-212 as complete!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:45:24.318 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=196 : 04-27-2020; 13:45:24.319 :: Result for this query is already in Cache!
+UIServer : tid=225 : 04-27-2020; 13:45:24.321 :: Asking OrderServer to buy book: whytheory
+LoadBalancer : tid=225 : 04-27-2020; 13:45:24.321 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:45:25.424 :: Removing book: whytheory from cache!
+HeartbeatMonitor : tid=220 : 04-27-2020; 13:45:26.529 :: Marking Job: OD1926986733-1588009524320-225 as complete!
+UIServer : tid=212 : 04-27-2020; 13:45:26.631 :: Asking CatalogServer to search for book: whytheory
+LoadBalancer : tid=212 : 04-27-2020; 13:45:26.631 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=196 : 04-27-2020; 13:45:26.635 :: Marking Job: 1597022091-1588009526631-212 as complete!
+java.net.ConnectException: Connection refused (Connection refused)
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:607)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:463)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:558)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:242)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:339)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:357)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1226)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1162)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1056)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:990)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(HttpURLConnection.java:1340)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream(HttpURLConnection.java:1315)
+	at pygmy.com.utils.HttpRESTUtils.httpPostJSON(HttpRESTUtils.java:105)
+	at pygmy.com.ui.UIServer.lambda$main$7(UIServer.java:253)
+	at spark.RouteImpl$1.handle(RouteImpl.java:72)
+	at spark.http.matching.Routes.execute(Routes.java:61)
+	at spark.http.matching.MatcherFilter.doFilter(MatcherFilter.java:134)
+	at spark.embeddedserver.jetty.JettyHandler.doHandle(JettyHandler.java:50)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1671)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:144)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.Server.handle(Server.java:505)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:370)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:267)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)
+	at org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:117)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:310)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:698)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:804)
+	at java.lang.Thread.run(Thread.java:748)
+FrontEndCacheManager : tid=236 : 04-27-2020; 13:50:51.139 :: Removing book: pioneer from cache!
+FrontEndCacheManager : tid=235 : 04-27-2020; 13:50:51.148 :: Removing book: whytheory from cache!
+java.net.ConnectException: Connection refused (Connection refused)
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:607)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:463)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:558)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:242)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:339)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:357)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1226)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1162)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1056)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:990)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(HttpURLConnection.java:1340)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream(HttpURLConnection.java:1315)
+	at pygmy.com.utils.HttpRESTUtils.httpPostJSON(HttpRESTUtils.java:105)
+	at pygmy.com.ui.UIServer.lambda$main$7(UIServer.java:242)
+	at spark.RouteImpl$1.handle(RouteImpl.java:72)
+	at spark.http.matching.Routes.execute(Routes.java:61)
+	at spark.http.matching.MatcherFilter.doFilter(MatcherFilter.java:134)
+	at spark.embeddedserver.jetty.JettyHandler.doHandle(JettyHandler.java:50)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1671)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:144)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.Server.handle(Server.java:505)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:370)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:267)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)
+	at org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:117)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:310)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:698)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:804)
+	at java.lang.Thread.run(Thread.java:748)
+java.net.ConnectException: Connection refused (Connection refused)
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:607)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:463)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:558)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:242)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:339)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:357)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1226)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1162)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1056)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:990)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(HttpURLConnection.java:1340)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream(HttpURLConnection.java:1315)
+	at pygmy.com.utils.HttpRESTUtils.httpPostJSON(HttpRESTUtils.java:105)
+	at pygmy.com.ui.UIServer.lambda$main$7(UIServer.java:253)
+	at spark.RouteImpl$1.handle(RouteImpl.java:72)
+	at spark.http.matching.Routes.execute(Routes.java:61)
+	at spark.http.matching.MatcherFilter.doFilter(MatcherFilter.java:134)
+	at spark.embeddedserver.jetty.JettyHandler.doHandle(JettyHandler.java:50)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1671)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:144)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.Server.handle(Server.java:505)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:370)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:267)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)
+	at org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:117)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:310)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:698)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:804)
+	at java.lang.Thread.run(Thread.java:748)
+UIServer : tid=235 : 04-27-2020; 13:50:51.527 :: Asking CatalogServer to search for books on topic: distributed-systems
+LoadBalancer : tid=235 : 04-27-2020; 13:50:51.527 :: Forwarding request to http://128.119.243.147:35640
+java.net.ConnectException: Connection refused (Connection refused)
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:607)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:463)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:558)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:242)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:339)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:357)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1226)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1162)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1056)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:990)
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1570)
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1498)
+	at pygmy.com.utils.HttpRESTUtils.httpGet(HttpRESTUtils.java:29)
+	at pygmy.com.ui.UIServer.lookupTopic(UIServer.java:341)
+	at pygmy.com.ui.FrontEndCacheManager.getTopicLookupResults(FrontEndCacheManager.java:53)
+	at pygmy.com.ui.UIServer.lambda$main$0(UIServer.java:85)
+	at spark.RouteImpl$1.handle(RouteImpl.java:72)
+	at spark.http.matching.Routes.execute(Routes.java:61)
+	at spark.http.matching.MatcherFilter.doFilter(MatcherFilter.java:134)
+	at spark.embeddedserver.jetty.JettyHandler.doHandle(JettyHandler.java:50)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1671)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:144)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.Server.handle(Server.java:505)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:370)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:267)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)
+	at org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:117)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:310)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:698)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:804)
+	at java.lang.Thread.run(Thread.java:748)
+java.net.ConnectException: Connection refused (Connection refused)
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:607)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:463)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:558)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:242)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:339)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:357)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1226)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1162)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1056)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:990)
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1570)
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1498)
+	at pygmy.com.utils.HttpRESTUtils.httpGet(HttpRESTUtils.java:29)
+	at pygmy.com.scheduler.HeartbeatMonitor.isServerAlive(HeartbeatMonitor.java:114)
+	at pygmy.com.scheduler.HeartbeatMonitor.getIncompleteJobs(HeartbeatMonitor.java:74)
+	at pygmy.com.ui.UIServer$1.run(UIServer.java:282)
+	at java.lang.Thread.run(Thread.java:748)
+HeartbeatMonitor : tid=23 : 04-27-2020; 13:50:53.547 :: Server: http://128.119.243.147:35640 has faulted. Asking LoadBalancer to remove this server..
+LoadBalancer : tid=23 : 04-27-2020; 13:50:53.548 :: Removing server: http://128.119.243.147:35640 from the load-balancer!
+UIServer : tid=23 : 04-27-2020; 13:50:53.550 :: Asking CatalogServer to search for books on topic: distributed-systems
+LoadBalancer : tid=23 : 04-27-2020; 13:50:53.550 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:50:53.557 :: Marking Job: 1431978076-1588009851527-235 as complete!
+FrontEndCacheManager : tid=236 : 04-27-2020; 13:50:53.740 :: Result for this query is already in Cache!
+UIServer : tid=81 : 04-27-2020; 13:50:53.742 :: Asking CatalogServer to search for book: impstudent
+LoadBalancer : tid=81 : 04-27-2020; 13:50:53.742 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=258 : 04-27-2020; 13:50:53.745 :: Marking Job: 568546232-1588009853742-81 as complete!
+UIServer : tid=160 : 04-27-2020; 13:50:53.848 :: Asking CatalogServer to search for book: xenart177
+LoadBalancer : tid=160 : 04-27-2020; 13:50:53.848 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=235 : 04-27-2020; 13:50:53.851 :: Marking Job: 485682882-1588009853848-160 as complete!
+UIServer : tid=236 : 04-27-2020; 13:50:54.053 :: Asking CatalogServer to search for book: 67720min
+LoadBalancer : tid=236 : 04-27-2020; 13:50:54.053 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=258 : 04-27-2020; 13:50:54.067 :: Marking Job: 1927420496-1588009854053-236 as complete!
+UIServer : tid=81 : 04-27-2020; 13:50:54.269 :: Asking CatalogServer to search for book: rpcdummies
+LoadBalancer : tid=81 : 04-27-2020; 13:50:54.270 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=235 : 04-27-2020; 13:50:54.273 :: Marking Job: 1286517834-1588009854269-81 as complete!
+FrontEndCacheManager : tid=258 : 04-27-2020; 13:50:57.849 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=236 : 04-27-2020; 13:50:57.859 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=235 : 04-27-2020; 13:50:58.965 :: Removing book: xenart177 from cache!
+UIServer : tid=160 : 04-27-2020; 13:50:58.968 :: Asking CatalogServer to search for book: xenart177
+LoadBalancer : tid=160 : 04-27-2020; 13:50:58.968 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:50:58.971 :: Marking Job: 302823355-1588009858968-160 as complete!
+UIServer : tid=258 : 04-27-2020; 13:50:59.174 :: Asking OrderServer to buy book: xenart177
+LoadBalancer : tid=258 : 04-27-2020; 13:50:59.174 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=236 : 04-27-2020; 13:51:00.277 :: Removing book: xenart177 from cache!
+java.net.ConnectException: Connection refused (Connection refused)
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:607)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:463)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:558)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:242)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:339)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:357)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1226)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1162)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1056)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:990)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(HttpURLConnection.java:1340)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream(HttpURLConnection.java:1315)
+	at pygmy.com.utils.HttpRESTUtils.httpPostJSON(HttpRESTUtils.java:105)
+	at pygmy.com.ui.UIServer.lambda$main$7(UIServer.java:242)
+	at spark.RouteImpl$1.handle(RouteImpl.java:72)
+	at spark.http.matching.Routes.execute(Routes.java:61)
+	at spark.http.matching.MatcherFilter.doFilter(MatcherFilter.java:134)
+	at spark.embeddedserver.jetty.JettyHandler.doHandle(JettyHandler.java:50)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1671)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:144)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.Server.handle(Server.java:505)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:370)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:267)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)
+	at org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:117)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:310)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:698)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:804)
+	at java.lang.Thread.run(Thread.java:748)
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:51:01.382 :: Marking Job: OD1112120770-1588009859174-258 as complete!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:51:02.484 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=235 : 04-27-2020; 13:51:02.485 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=261 : 04-27-2020; 13:51:03.588 :: Removing book: 67720min from cache!
+UIServer : tid=160 : 04-27-2020; 13:51:03.591 :: Asking CatalogServer to search for book: 67720min
+LoadBalancer : tid=160 : 04-27-2020; 13:51:03.591 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=236 : 04-27-2020; 13:51:03.594 :: Marking Job: 1488861296-1588009863591-160 as complete!
+UIServer : tid=258 : 04-27-2020; 13:51:03.796 :: Asking OrderServer to buy book: 67720min
+LoadBalancer : tid=258 : 04-27-2020; 13:51:03.796 :: Forwarding request to http://128.119.243.168:35660
+java.net.ConnectException: Connection refused (Connection refused)
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:607)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:463)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:558)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:242)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:339)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:357)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1226)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1162)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1056)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:990)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(HttpURLConnection.java:1340)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream(HttpURLConnection.java:1315)
+	at pygmy.com.utils.HttpRESTUtils.httpPostJSON(HttpRESTUtils.java:105)
+	at pygmy.com.ui.UIServer.buyBook(UIServer.java:379)
+	at pygmy.com.ui.UIServer.lambda$main$4(UIServer.java:175)
+	at spark.RouteImpl$1.handle(RouteImpl.java:72)
+	at spark.http.matching.Routes.execute(Routes.java:61)
+	at spark.http.matching.MatcherFilter.doFilter(MatcherFilter.java:134)
+	at spark.embeddedserver.jetty.JettyHandler.doHandle(JettyHandler.java:50)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1671)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:144)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.Server.handle(Server.java:505)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:370)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:267)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)
+	at org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:117)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:310)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:698)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:804)
+	at java.lang.Thread.run(Thread.java:748)
+java.net.ConnectException: Connection refused (Connection refused)
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:607)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:463)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:558)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:242)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:339)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:357)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1226)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1162)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1056)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:990)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(HttpURLConnection.java:1340)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream(HttpURLConnection.java:1315)
+	at pygmy.com.utils.HttpRESTUtils.httpPostJSON(HttpRESTUtils.java:105)
+	at pygmy.com.ui.UIServer.lambda$main$7(UIServer.java:242)
+	at spark.RouteImpl$1.handle(RouteImpl.java:72)
+	at spark.http.matching.Routes.execute(Routes.java:61)
+	at spark.http.matching.MatcherFilter.doFilter(MatcherFilter.java:134)
+	at spark.embeddedserver.jetty.JettyHandler.doHandle(JettyHandler.java:50)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1671)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:144)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.Server.handle(Server.java:505)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:370)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:267)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)
+	at org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:117)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:310)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:698)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:804)
+	at java.lang.Thread.run(Thread.java:748)
+java.net.ConnectException: Connection refused (Connection refused)
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:607)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:463)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:558)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:242)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:339)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:357)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1226)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1162)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1056)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:990)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(HttpURLConnection.java:1340)
+	at sun.net.www.protocol.http.HttpURLConnection.getOutputStream(HttpURLConnection.java:1315)
+	at pygmy.com.utils.HttpRESTUtils.httpPostJSON(HttpRESTUtils.java:105)
+	at pygmy.com.ui.UIServer.lambda$main$7(UIServer.java:242)
+	at spark.RouteImpl$1.handle(RouteImpl.java:72)
+	at spark.http.matching.Routes.execute(Routes.java:61)
+	at spark.http.matching.MatcherFilter.doFilter(MatcherFilter.java:134)
+	at spark.embeddedserver.jetty.JettyHandler.doHandle(JettyHandler.java:50)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1671)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:144)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)
+	at org.eclipse.jetty.server.Server.handle(Server.java:505)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:370)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:267)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)
+	at org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:117)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:310)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:698)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:804)
+	at java.lang.Thread.run(Thread.java:748)
+java.net.ConnectException: Connection refused (Connection refused)
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:607)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:175)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:463)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:558)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:242)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:339)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:357)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1226)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1162)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1056)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:990)
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1570)
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1498)
+	at pygmy.com.utils.HttpRESTUtils.httpGet(HttpRESTUtils.java:29)
+	at pygmy.com.scheduler.HeartbeatMonitor.isServerAlive(HeartbeatMonitor.java:114)
+	at pygmy.com.scheduler.HeartbeatMonitor.getIncompleteJobs(HeartbeatMonitor.java:74)
+	at pygmy.com.ui.UIServer$1.run(UIServer.java:283)
+	at java.lang.Thread.run(Thread.java:748)
+HeartbeatMonitor : tid=23 : 04-27-2020; 13:51:24.561 :: Server: http://128.119.243.168:35660 has faulted. Asking LoadBalancer to remove this server..
+LoadBalancer : tid=23 : 04-27-2020; 13:51:24.561 :: Removing server: http://128.119.243.168:35660 from the load-balancer!
+LoadBalancer : tid=23 : 04-27-2020; 13:51:24.561 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=261 : 04-27-2020; 13:51:32.859 :: Removing book: 67720min from cache!
+HeartbeatMonitor : tid=236 : 04-27-2020; 13:51:33.673 :: Marking Job: OD765068070-1588009863796-258 as complete!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:51:33.903 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:51:33.905 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=235 : 04-27-2020; 13:51:35.008 :: Removing book: rpcdummies from cache!
+UIServer : tid=261 : 04-27-2020; 13:51:35.010 :: Asking CatalogServer to search for book: rpcdummies
+LoadBalancer : tid=261 : 04-27-2020; 13:51:35.011 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=236 : 04-27-2020; 13:51:35.015 :: Marking Job: 6839-1588009895010-261 as complete!
+UIServer : tid=258 : 04-27-2020; 13:51:35.217 :: Asking OrderServer to buy book: rpcdummies
+LoadBalancer : tid=258 : 04-27-2020; 13:51:35.217 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:51:36.320 :: Removing book: rpcdummies from cache!
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:51:37.424 :: Marking Job: OD1210978408-1588009895216-258 as complete!
+UIServer : tid=235 : 04-27-2020; 13:51:38.526 :: Asking CatalogServer to search for book: impstudent
+LoadBalancer : tid=235 : 04-27-2020; 13:51:38.526 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=236 : 04-27-2020; 13:51:38.529 :: Marking Job: 740324540-1588009898526-235 as complete!
+FrontEndCacheManager : tid=261 : 04-27-2020; 13:51:38.731 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:51:39.833 :: Removing book: impstudent from cache!
+UIServer : tid=160 : 04-27-2020; 13:51:39.835 :: Asking CatalogServer to search for book: impstudent
+LoadBalancer : tid=160 : 04-27-2020; 13:51:39.835 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=258 : 04-27-2020; 13:51:39.838 :: Marking Job: 1610434435-1588009899835-160 as complete!
+UIServer : tid=236 : 04-27-2020; 13:51:40.040 :: Asking OrderServer to buy book: impstudent
+LoadBalancer : tid=236 : 04-27-2020; 13:51:40.040 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=235 : 04-27-2020; 13:51:41.143 :: Removing book: impstudent from cache!
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:51:41.248 :: Marking Job: OD1727083278-1588009900040-236 as complete!
+UIServer : tid=160 : 04-27-2020; 13:51:42.350 :: Asking CatalogServer to search for book: project3
+LoadBalancer : tid=160 : 04-27-2020; 13:51:42.350 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=235 : 04-27-2020; 13:51:42.353 :: Marking Job: 1207796160-1588009902350-160 as complete!
+FrontEndCacheManager : tid=261 : 04-27-2020; 13:51:42.555 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:51:43.659 :: Removing book: project3 from cache!
+UIServer : tid=258 : 04-27-2020; 13:51:43.664 :: Asking CatalogServer to search for book: project3
+LoadBalancer : tid=258 : 04-27-2020; 13:51:43.664 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=236 : 04-27-2020; 13:51:43.668 :: Marking Job: 1174872866-1588009903664-258 as complete!
+UIServer : tid=235 : 04-27-2020; 13:51:43.870 :: Asking OrderServer to buy book: project3
+LoadBalancer : tid=235 : 04-27-2020; 13:51:43.870 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:51:44.973 :: Removing book: project3 from cache!
+HeartbeatMonitor : tid=261 : 04-27-2020; 13:51:46.077 :: Marking Job: OD860186171-1588009903870-235 as complete!
+UIServer : tid=81 : 04-27-2020; 13:51:47.179 :: Asking CatalogServer to search for book: pioneer
+LoadBalancer : tid=81 : 04-27-2020; 13:51:47.179 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=236 : 04-27-2020; 13:51:47.182 :: Marking Job: 1019926664-1588009907179-81 as complete!
+FrontEndCacheManager : tid=258 : 04-27-2020; 13:51:47.384 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:51:48.486 :: Removing book: pioneer from cache!
+UIServer : tid=261 : 04-27-2020; 13:51:48.488 :: Asking CatalogServer to search for book: pioneer
+LoadBalancer : tid=261 : 04-27-2020; 13:51:48.488 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=235 : 04-27-2020; 13:51:48.491 :: Marking Job: 1627033330-1588009908488-261 as complete!
+UIServer : tid=236 : 04-27-2020; 13:51:48.693 :: Asking OrderServer to buy book: pioneer
+LoadBalancer : tid=236 : 04-27-2020; 13:51:48.694 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:51:49.796 :: Removing book: pioneer from cache!
+HeartbeatMonitor : tid=258 : 04-27-2020; 13:51:50.900 :: Marking Job: OD1894868162-1588009908693-236 as complete!
+UIServer : tid=235 : 04-27-2020; 13:51:52.002 :: Asking CatalogServer to search for book: whytheory
+LoadBalancer : tid=235 : 04-27-2020; 13:51:52.002 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=261 : 04-27-2020; 13:51:52.005 :: Marking Job: 282306485-1588009912002-235 as complete!
+FrontEndCacheManager : tid=258 : 04-27-2020; 13:51:52.207 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:51:53.310 :: Removing book: whytheory from cache!
+UIServer : tid=236 : 04-27-2020; 13:51:53.312 :: Asking CatalogServer to search for book: whytheory
+LoadBalancer : tid=236 : 04-27-2020; 13:51:53.312 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=261 : 04-27-2020; 13:51:53.315 :: Marking Job: 806282504-1588009913312-236 as complete!
+UIServer : tid=81 : 04-27-2020; 13:51:53.517 :: Asking OrderServer to buy book: whytheory
+LoadBalancer : tid=81 : 04-27-2020; 13:51:53.517 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=235 : 04-27-2020; 13:51:54.619 :: Removing book: whytheory from cache!
+HeartbeatMonitor : tid=258 : 04-27-2020; 13:51:55.725 :: Marking Job: OD1855144983-1588009913517-81 as complete!
+LoadBalancer : tid=261 : 04-27-2020; 13:52:03.713 :: Adding server: http://128.119.243.147:35640 to the load-balancer!
+LoadBalancer : tid=236 : 04-27-2020; 13:52:06.765 :: Adding server: http://128.119.243.168:35660 to the load-balancer!
+FrontEndCacheManager : tid=236 : 04-27-2020; 13:52:24.897 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:52:24.906 :: Result for this query is already in Cache!
+UIServer : tid=261 : 04-27-2020; 13:52:24.908 :: Asking CatalogServer to search for book: impstudent
+LoadBalancer : tid=261 : 04-27-2020; 13:52:24.909 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:52:24.916 :: Marking Job: 586850964-1588009944908-261 as complete!
+UIServer : tid=235 : 04-27-2020; 13:52:25.116 :: Asking CatalogServer to search for book: xenart177
+LoadBalancer : tid=235 : 04-27-2020; 13:52:25.116 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=236 : 04-27-2020; 13:52:25.128 :: Marking Job: 1858513668-1588009945116-235 as complete!
+UIServer : tid=160 : 04-27-2020; 13:52:25.230 :: Asking CatalogServer to search for book: 67720min
+LoadBalancer : tid=160 : 04-27-2020; 13:52:25.230 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:52:25.234 :: Marking Job: 625065357-1588009945230-160 as complete!
+UIServer : tid=261 : 04-27-2020; 13:52:25.436 :: Asking CatalogServer to search for book: rpcdummies
+LoadBalancer : tid=261 : 04-27-2020; 13:52:25.436 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=236 : 04-27-2020; 13:52:25.441 :: Marking Job: 1296012604-1588009945436-261 as complete!
+FrontEndCacheManager : tid=235 : 04-27-2020; 13:52:28.924 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=236 : 04-27-2020; 13:52:28.933 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=261 : 04-27-2020; 13:52:30.040 :: Removing book: xenart177 from cache!
+UIServer : tid=160 : 04-27-2020; 13:52:30.042 :: Asking CatalogServer to search for book: xenart177
+LoadBalancer : tid=160 : 04-27-2020; 13:52:30.043 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:52:30.045 :: Marking Job: 2092419209-1588009950042-160 as complete!
+UIServer : tid=235 : 04-27-2020; 13:52:30.247 :: Asking OrderServer to buy book: xenart177
+LoadBalancer : tid=235 : 04-27-2020; 13:52:30.247 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=236 : 04-27-2020; 13:52:31.351 :: Removing book: xenart177 from cache!
+HeartbeatMonitor : tid=236 : 04-27-2020; 13:52:32.456 :: Marking Job: OD1438323393-1588009950247-235 as complete!
+FrontEndCacheManager : tid=261 : 04-27-2020; 13:52:33.558 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:52:33.559 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=235 : 04-27-2020; 13:52:34.662 :: Removing book: 67720min from cache!
+UIServer : tid=160 : 04-27-2020; 13:52:34.665 :: Asking CatalogServer to search for book: 67720min
+LoadBalancer : tid=160 : 04-27-2020; 13:52:34.665 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=261 : 04-27-2020; 13:52:34.671 :: Marking Job: 1417048285-1588009954665-160 as complete!
+UIServer : tid=81 : 04-27-2020; 13:52:34.872 :: Asking OrderServer to buy book: 67720min
+LoadBalancer : tid=81 : 04-27-2020; 13:52:34.872 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=236 : 04-27-2020; 13:52:35.979 :: Removing book: 67720min from cache!
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:52:37.088 :: Marking Job: OD1841747909-1588009954872-81 as complete!
+FrontEndCacheManager : tid=236 : 04-27-2020; 13:52:38.190 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=235 : 04-27-2020; 13:52:38.192 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=261 : 04-27-2020; 13:52:39.295 :: Removing book: rpcdummies from cache!
+UIServer : tid=160 : 04-27-2020; 13:52:39.298 :: Asking CatalogServer to search for book: rpcdummies
+LoadBalancer : tid=160 : 04-27-2020; 13:52:39.298 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:52:39.303 :: Marking Job: 2087916043-1588009959298-160 as complete!
+UIServer : tid=236 : 04-27-2020; 13:52:39.505 :: Asking OrderServer to buy book: rpcdummies
+LoadBalancer : tid=236 : 04-27-2020; 13:52:39.505 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=261 : 04-27-2020; 13:52:40.615 :: Removing book: rpcdummies from cache!
+HeartbeatMonitor : tid=160 : 04-27-2020; 13:52:41.724 :: Marking Job: OD509704020-1588009959505-236 as complete!
+UIServer : tid=81 : 04-27-2020; 13:52:42.825 :: Asking CatalogServer to search for book: impstudent
+LoadBalancer : tid=81 : 04-27-2020; 13:52:42.825 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=235 : 04-27-2020; 13:52:42.830 :: Marking Job: 796829685-1588009962825-81 as complete!
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:52:43.031 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=236 : 04-27-2020; 13:52:44.133 :: Removing book: impstudent from cache!
+UIServer : tid=235 : 04-27-2020; 13:52:44.136 :: Asking CatalogServer to search for book: impstudent
+LoadBalancer : tid=235 : 04-27-2020; 13:52:44.136 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:52:44.139 :: Marking Job: 629832712-1588009964136-235 as complete!
+UIServer : tid=160 : 04-27-2020; 13:52:44.341 :: Asking OrderServer to buy book: impstudent
+LoadBalancer : tid=160 : 04-27-2020; 13:52:44.341 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=261 : 04-27-2020; 13:52:45.447 :: Removing book: impstudent from cache!
+HeartbeatMonitor : tid=81 : 04-27-2020; 13:52:46.553 :: Marking Job: OD507581241-1588009964341-160 as complete!
+UIServer : tid=261 : 04-27-2020; 13:52:47.654 :: Asking CatalogServer to search for book: project3
+LoadBalancer : tid=261 : 04-27-2020; 13:52:47.654 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=236 : 04-27-2020; 13:52:47.658 :: Marking Job: 947726158-1588009967654-261 as complete!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:52:47.860 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=235 : 04-27-2020; 13:52:48.962 :: Removing book: project3 from cache!
+UIServer : tid=160 : 04-27-2020; 13:52:48.965 :: Asking CatalogServer to search for book: project3
+LoadBalancer : tid=160 : 04-27-2020; 13:52:48.965 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=236 : 04-27-2020; 13:52:48.968 :: Marking Job: 869967987-1588009968964-160 as complete!
+UIServer : tid=261 : 04-27-2020; 13:52:49.170 :: Asking OrderServer to buy book: project3
+LoadBalancer : tid=261 : 04-27-2020; 13:52:49.170 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:52:50.275 :: Removing book: project3 from cache!
+HeartbeatMonitor : tid=236 : 04-27-2020; 13:52:51.380 :: Marking Job: OD380292010-1588009969169-261 as complete!
+UIServer : tid=235 : 04-27-2020; 13:52:52.481 :: Asking CatalogServer to search for book: pioneer
+LoadBalancer : tid=235 : 04-27-2020; 13:52:52.481 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=236 : 04-27-2020; 13:52:52.487 :: Marking Job: 733774589-1588009972481-235 as complete!
+FrontEndCacheManager : tid=160 : 04-27-2020; 13:52:52.589 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:52:53.692 :: Removing book: pioneer from cache!
+UIServer : tid=261 : 04-27-2020; 13:52:53.694 :: Asking CatalogServer to search for book: pioneer
+LoadBalancer : tid=261 : 04-27-2020; 13:52:53.694 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=236 : 04-27-2020; 13:52:53.697 :: Marking Job: 12900476-1588009973694-261 as complete!
+UIServer : tid=235 : 04-27-2020; 13:52:53.898 :: Asking OrderServer to buy book: pioneer
+LoadBalancer : tid=235 : 04-27-2020; 13:52:53.899 :: Forwarding request to http://128.119.243.168:35660
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:52:55.003 :: Removing book: pioneer from cache!
+HeartbeatMonitor : tid=261 : 04-27-2020; 13:52:56.108 :: Marking Job: OD1360667954-1588009973898-235 as complete!
+UIServer : tid=81 : 04-27-2020; 13:52:57.210 :: Asking CatalogServer to search for book: whytheory
+LoadBalancer : tid=81 : 04-27-2020; 13:52:57.210 :: Forwarding request to http://128.119.243.147:35640
+HeartbeatMonitor : tid=236 : 04-27-2020; 13:52:57.213 :: Marking Job: 1582978579-1588009977210-81 as complete!
+FrontEndCacheManager : tid=268 : 04-27-2020; 13:52:57.415 :: Result for this query is already in Cache!
+FrontEndCacheManager : tid=261 : 04-27-2020; 13:52:58.517 :: Removing book: whytheory from cache!
+UIServer : tid=160 : 04-27-2020; 13:52:58.519 :: Asking CatalogServer to search for book: whytheory
+LoadBalancer : tid=160 : 04-27-2020; 13:52:58.519 :: Forwarding request to http://128.119.243.175:35640
+HeartbeatMonitor : tid=235 : 04-27-2020; 13:52:58.522 :: Marking Job: 1867407721-1588009978519-160 as complete!
+UIServer : tid=236 : 04-27-2020; 13:52:58.724 :: Asking OrderServer to buy book: whytheory
+LoadBalancer : tid=236 : 04-27-2020; 13:52:58.724 :: Forwarding request to http://128.119.243.175:35660
+FrontEndCacheManager : tid=81 : 04-27-2020; 13:52:59.828 :: Removing book: whytheory from cache!
+HeartbeatMonitor : tid=261 : 04-27-2020; 13:53:00.934 :: Marking Job: OD1087662793-1588009978724-236 as complete!

@@ -1,0 +1,146 @@
+CatalogServer : tid=1 : 04-27-2020; 13:52:01.485 :: Catalog Server, running on http://128.119.243.147:35640...
+[Thread-0] INFO org.eclipse.jetty.util.log - Logging initialized @479ms to org.eclipse.jetty.util.log.Slf4jLog
+[Thread-0] INFO spark.embeddedserver.jetty.EmbeddedJettyServer - == Spark has ignited ...
+[Thread-0] INFO spark.embeddedserver.jetty.EmbeddedJettyServer - >> Listening on 0.0.0.0:35640
+[Thread-0] INFO org.eclipse.jetty.server.Server - jetty-9.4.18.v20190429; built: 2019-04-29T20:42:08.989Z; git: e1bc35120a6617ee3df052294e433f3a25ce7097; jvm 1.8.0_252-8u252-b09-1~16.04-b09
+[Thread-0] INFO org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[Thread-0] INFO org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[Thread-0] INFO org.eclipse.jetty.server.session - node0 Scavenging every 600000ms
+[Thread-0] INFO org.eclipse.jetty.server.AbstractConnector - Started ServerConnector@28549779{HTTP/1.1,[http/1.1]}{0.0.0.0:35640}
+[Thread-0] INFO org.eclipse.jetty.server.Server - Started @669ms
+{
+  "ID": "67720min",
+  "Topic": "distributed-systems",
+  "Cost": 20,
+  "Stock": 35000,
+  "Name": "How to get a good grade in 677 in 20 minutes a day."
+}
+{
+  "ID": "rpcdummies",
+  "Topic": "distributed-systems",
+  "Cost": 15,
+  "Stock": 36000,
+  "Name": "RPCs for Dummies."
+}
+{
+  "ID": "xenart177",
+  "Topic": "graduate-school",
+  "Cost": 25,
+  "Stock": 45000,
+  "Name": "Xen and the Art of Surviving Graduate School."
+}
+{
+  "ID": "impstudent",
+  "Topic": "graduate-school",
+  "Cost": 30,
+  "Stock": 55500,
+  "Name": "Cooking for the Impatient Graduate Student."
+}
+{
+  "ID": "pioneer",
+  "Topic": "graduate-school",
+  "Cost": 25,
+  "Stock": 50000,
+  "Name": "Spring in the Pioneer Valley."
+}
+{
+  "ID": "whytheory",
+  "Topic": "graduate-school",
+  "Cost": 30,
+  "Stock": 40000,
+  "Name": "Why theory classes are so hard."
+}
+{
+  "ID": "project3",
+  "Topic": "distributed-systems",
+  "Cost": 35,
+  "Stock": 58000,
+  "Name": "How to finish Project 3 on time"
+}
+{
+  "ID": "67720min",
+  "Topic": "distributed-systems",
+  "Cost": 20,
+  "Stock": 34882,
+  "Name": "How to get a good grade in 677 in 20 minutes a day."
+}
+{
+  "ID": "rpcdummies",
+  "Topic": "distributed-systems",
+  "Cost": 15,
+  "Stock": 35807,
+  "Name": "RPCs for Dummies."
+}
+{
+  "ID": "xenart177",
+  "Topic": "graduate-school",
+  "Cost": 25,
+  "Stock": 44827,
+  "Name": "Xen and the Art of Surviving Graduate School."
+}
+{
+  "ID": "impstudent",
+  "Topic": "graduate-school",
+  "Cost": 30,
+  "Stock": 55374,
+  "Name": "Cooking for the Impatient Graduate Student."
+}
+{
+  "ID": "pioneer",
+  "Topic": "graduate-school",
+  "Cost": 25,
+  "Stock": 49725,
+  "Name": "Spring in the Pioneer Valley."
+}
+{
+  "ID": "whytheory",
+  "Topic": "graduate-school",
+  "Cost": 30,
+  "Stock": 39856,
+  "Name": "Why theory classes are so hard."
+}
+{
+  "ID": "project3",
+  "Topic": "distributed-systems",
+  "Cost": 35,
+  "Stock": 57840,
+  "Name": "How to finish Project 3 on time"
+}
+Recovery complete..
+CatalogServer : tid=33 : 04-27-2020; 13:52:25.120 :: Searching for book: xenart177
+CatalogServer : tid=33 : 04-27-2020; 13:52:25.123 :: ACKing jobId: 1858513668-1588009945116-235
+CatalogServer : tid=22 : 04-27-2020; 13:52:25.438 :: Searching for book: rpcdummies
+CatalogServer : tid=22 : 04-27-2020; 13:52:25.440 :: ACKing jobId: 1296012604-1588009945436-261
+CatalogServer : tid=33 : 04-27-2020; 13:52:28.942 :: Replicating order: DEFAULT..
+CatalogServer : tid=37 : 04-27-2020; 13:52:30.251 :: Replicating order: #OD1438323393-1588009950247-235..
+CatalogServer : tid=37 : 04-27-2020; 13:52:33.575 :: Replicating order: DEFAULT..
+CatalogServer : tid=37 : 04-27-2020; 13:52:34.666 :: Searching for book: 67720min
+CatalogServer : tid=37 : 04-27-2020; 13:52:34.669 :: ACKing jobId: 1417048285-1588009954665-160
+CatalogServer : tid=37 : 04-27-2020; 13:52:34.880 :: Replicating order: #OD1841747909-1588009954872-81..
+CatalogServer : tid=37 : 04-27-2020; 13:52:38.195 :: Replicating order: DEFAULT..
+TaskQueue : tid=22 : 04-27-2020; 13:52:39.512 :: Added task: #OD509704020-1588009959505-236 to task queue!
+CatalogServer : tid=35 : 04-27-2020; 13:52:39.513 :: Executing task: #OD509704020-1588009959505-236
+CatalogServer : tid=35 : 04-27-2020; 13:52:39.518 :: Replicated order: #OD509704020-1588009959505-236 on replica server..
+CatalogServer : tid=22 : 04-27-2020; 13:52:40.616 :: ACKing jobId: OD509704020-1588009959505-236
+CatalogServer : tid=27 : 04-27-2020; 13:52:42.826 :: Searching for book: impstudent
+CatalogServer : tid=27 : 04-27-2020; 13:52:42.828 :: ACKing jobId: 796829685-1588009962825-81
+CatalogServer : tid=29 : 04-27-2020; 13:52:43.033 :: Replicating order: DEFAULT..
+TaskQueue : tid=37 : 04-27-2020; 13:52:44.346 :: Added task: #OD507581241-1588009964341-160 to task queue!
+CatalogServer : tid=35 : 04-27-2020; 13:52:44.346 :: Executing task: #OD507581241-1588009964341-160
+CatalogServer : tid=35 : 04-27-2020; 13:52:44.349 :: Replicated order: #OD507581241-1588009964341-160 on replica server..
+CatalogServer : tid=37 : 04-27-2020; 13:52:45.447 :: ACKing jobId: OD507581241-1588009964341-160
+CatalogServer : tid=22 : 04-27-2020; 13:52:47.655 :: Searching for book: project3
+CatalogServer : tid=22 : 04-27-2020; 13:52:47.657 :: ACKing jobId: 947726158-1588009967654-261
+CatalogServer : tid=22 : 04-27-2020; 13:52:47.862 :: Replicating order: DEFAULT..
+CatalogServer : tid=22 : 04-27-2020; 13:52:49.176 :: Replicating order: #OD380292010-1588009969169-261..
+CatalogServer : tid=29 : 04-27-2020; 13:52:52.482 :: Searching for book: pioneer
+CatalogServer : tid=29 : 04-27-2020; 13:52:52.486 :: ACKing jobId: 733774589-1588009972481-235
+CatalogServer : tid=29 : 04-27-2020; 13:52:52.592 :: Replicating order: DEFAULT..
+CatalogServer : tid=29 : 04-27-2020; 13:52:53.903 :: Replicating order: #OD1360667954-1588009973898-235..
+CatalogServer : tid=27 : 04-27-2020; 13:52:57.210 :: Searching for book: whytheory
+CatalogServer : tid=27 : 04-27-2020; 13:52:57.213 :: ACKing jobId: 1582978579-1588009977210-81
+CatalogServer : tid=37 : 04-27-2020; 13:52:57.417 :: Replicating order: DEFAULT..
+TaskQueue : tid=33 : 04-27-2020; 13:52:58.727 :: Added task: #OD1087662793-1588009978724-236 to task queue!
+CatalogServer : tid=35 : 04-27-2020; 13:52:58.728 :: Executing task: #OD1087662793-1588009978724-236
+CatalogServer : tid=35 : 04-27-2020; 13:52:58.730 :: Replicated order: #OD1087662793-1588009978724-236 on replica server..
+CatalogServer : tid=33 : 04-27-2020; 13:52:59.829 :: ACKing jobId: OD1087662793-1588009978724-236

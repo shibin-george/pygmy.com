@@ -1,0 +1,24 @@
+OrderServer : tid=1 : 04-27-2020; 13:52:04.616 :: Order Server, running on http://128.119.243.168:35660...
+[Thread-0] INFO org.eclipse.jetty.util.log - Logging initialized @352ms to org.eclipse.jetty.util.log.Slf4jLog
+[Thread-0] INFO spark.embeddedserver.jetty.EmbeddedJettyServer - == Spark has ignited ...
+[Thread-0] INFO spark.embeddedserver.jetty.EmbeddedJettyServer - >> Listening on 0.0.0.0:35660
+[Thread-0] INFO org.eclipse.jetty.server.Server - jetty-9.4.18.v20190429; built: 2019-04-29T20:42:08.989Z; git: e1bc35120a6617ee3df052294e433f3a25ce7097; jvm 1.8.0_252-8u252-b09-1~16.04-b09
+[Thread-0] INFO org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[Thread-0] INFO org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[Thread-0] INFO org.eclipse.jetty.server.session - node0 Scavenging every 660000ms
+[Thread-0] INFO org.eclipse.jetty.server.AbstractConnector - Started ServerConnector@364bbe75{HTTP/1.1,[http/1.1]}{0.0.0.0:35660}
+[Thread-0] INFO org.eclipse.jetty.server.Server - Started @546ms
+LoadBalancer : tid=29 : 04-27-2020; 13:52:11.358 :: Adding server: http://128.119.243.175:35640 to the load-balancer!
+LoadBalancer : tid=29 : 04-27-2020; 13:52:11.359 :: Adding server: http://128.119.243.147:35640 to the load-balancer!
+LoadBalancer : tid=27 : 04-27-2020; 13:52:34.873 :: Forwarding request to http://128.119.243.175:35640
+OrderServer : tid=27 : 04-27-2020; 13:52:34.876 :: Asking CatalogServer to update count of book: 67720min
+HeartbeatMonitor : tid=22 : 04-27-2020; 13:52:35.984 :: Marking Job: OD1841747909-1588009954872-81 as complete!
+OrderServer : tid=27 : 04-27-2020; 13:52:37.084 :: ACKing jobId: OD1841747909-1588009954872-81
+LoadBalancer : tid=27 : 04-27-2020; 13:52:44.343 :: Forwarding request to http://128.119.243.147:35640
+OrderServer : tid=27 : 04-27-2020; 13:52:44.343 :: Asking CatalogServer to update count of book: impstudent
+HeartbeatMonitor : tid=29 : 04-27-2020; 13:52:45.450 :: Marking Job: OD507581241-1588009964341-160 as complete!
+OrderServer : tid=27 : 04-27-2020; 13:52:46.551 :: ACKing jobId: OD507581241-1588009964341-160
+LoadBalancer : tid=28 : 04-27-2020; 13:52:53.900 :: Forwarding request to http://128.119.243.175:35640
+OrderServer : tid=28 : 04-27-2020; 13:52:53.900 :: Asking CatalogServer to update count of book: pioneer
+HeartbeatMonitor : tid=22 : 04-27-2020; 13:52:55.006 :: Marking Job: OD1360667954-1588009973898-235 as complete!
+OrderServer : tid=28 : 04-27-2020; 13:52:56.106 :: ACKing jobId: OD1360667954-1588009973898-235

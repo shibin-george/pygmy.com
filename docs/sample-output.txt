@@ -1,0 +1,92 @@
+elnux2 the-new-pygmy.com) > ./user-interface.sh
+Contacting UIServer at http://128.119.243.168:35650
+
+Enter:
+1 for search(Topic Name)
+2 for lookup(Book ID)
+3 for buy(Book ID)
+0 to exit.
+1
+
+Enter:
+1 to search("distributed systems")
+2 to search("graduate school")
+2
+{
+  "items": [
+    {
+      "ID": "xenart177",
+      "Topic": "graduate-school",
+      "Name": "Xen and the Art of Surviving Graduate School."
+    },
+    {
+      "ID": "impstudent",
+      "Topic": "graduate-school",
+      "Name": "Cooking for the Impatient Graduate Student."
+    },
+    {
+      "ID": "pioneer",
+      "Topic": "graduate-school",
+      "Name": "Spring in the Pioneer Valley."
+    },
+    {
+      "ID": "whytheory",
+      "Topic": "graduate-school",
+      "Name": "Why theory classes are so hard."
+    }
+  ],
+  "ServedByCatalogServer": "http://128.119.243.175:35640"
+}
+
+Enter:
+1 for search(Topic Name)
+2 for lookup(Book ID)
+3 for buy(Book ID)
+0 to exit.
+2
+
+Enter the exact ID of the book:
+whytheory
+{
+  "ID": "whytheory",
+  "Topic": "graduate-school",
+  "Cost": 30,
+  "ServedByCatalogServer": "http://128.119.243.175:35640",
+  "Stock": 39856,
+  "Name": "Why theory classes are so hard."
+}
+
+Enter:
+1 for search(Topic Name)
+2 for lookup(Book ID)
+3 for buy(Book ID)
+0 to exit.
+3
+
+Enter the exact ID of the book:
+whytheory
+
+Enter count to buy:
+30
+{
+  "Status": "Successfully bought the book(s)!",
+  "OrderStatus": "Order approved by OrderServer.",
+  "code": 0,
+  "ServedByOrderServer": "http://128.119.243.175:35660",
+  "orderId": "#OD579255440-1588017956136-1019",
+  "CatalogServerTimeStamp": 1588017956145,
+  "OrderServerTimeStamp": 1588017956138,
+  "UIServerTimeStamp": 1588017956136,
+  "ServedByCatalogServer": "http://128.119.243.175:35640",
+  "Stock": 39826,
+  "CatalogStatus": "Order approved by CatalogServer.",
+  "bookId": "whytheory"
+}
+
+Enter:
+1 for search(Topic Name)
+2 for lookup(Book ID)
+3 for buy(Book ID)
+0 to exit.
+0
+elnux2 the-new-pygmy.com) >                                    

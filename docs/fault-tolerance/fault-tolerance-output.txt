@@ -1,0 +1,215 @@
+Crashing one of the catalog-server replicas..
+Crashed Catalog Server running @ elnux1.cs.umass.edu
+
+Crashing one of the order-server replicas..
+Crashed Order Server running @ elnux3.cs.umass.edu 
+
+Clearing cached responses from UIServer..
+
+Checking search/lookup/buy endpoints are still up and running..
+
+
+===============================================================================
+Starting test #
+===============================================================================
+
+
+Testing /search endpoint when exactly one of the catalog-server replicas is down..
+/search/distributed-systems fetched correct number of books!
+/search/distributed-systems fetched all the correct books!
+/search/graduate-school fetched correct number of books!
+/search/graduate-school fetched all the correct books!
+
+Testing /lookup endpoint when exactly one of the catalog-server replicas is down..
+/lookup/impstudent was served by http://128.119.243.175:35640 as was expected!
+/lookup/impstudent fetched all the correct details for the book!
+/lookup/xenart177 was served by http://128.119.243.175:35640 as was expected!
+/lookup/xenart177 fetched all the correct details for the book!
+/lookup/67720min was served by http://128.119.243.175:35640 as was expected!
+/lookup/67720min fetched all the correct details for the book!
+/lookup/rpcdummies was served by http://128.119.243.175:35640 as was expected!
+/lookup/rpcdummies fetched all the correct details for the book!
+
+Passed test #
+===============================================================================
+
+
+
+===============================================================================
+Starting test #
+===============================================================================
+
+Initial stock of xenart177 is 44827
+Now updating stock of xenart177 to 45068
+Updated stock of book: xenart177 to 45068
+Stock of xenart177 after update operation is as expected: 45068
+Now buying 241 units of xenart177
+This buy request was served by:
+ OrderServer: http://128.119.243.175:35660
+ CatalogServer: http://128.119.243.175:35640
+Stock of xenart177 after buy operation is as expected: 44827
+Initial stock of 67720min is 34882
+Now updating stock of 67720min to 35090
+Updated stock of book: 67720min to 35090
+Stock of 67720min after update operation is as expected: 35090
+Now buying 208 units of 67720min
+This buy request was served by:
+ OrderServer: http://128.119.243.175:35660
+ CatalogServer: http://128.119.243.175:35640
+Stock of 67720min after buy operation is as expected: 34882
+Initial stock of rpcdummies is 35807
+Now updating stock of rpcdummies to 36032
+Updated stock of book: rpcdummies to 36032
+Stock of rpcdummies after update operation is as expected: 36032
+Now buying 225 units of rpcdummies
+This buy request was served by:
+ OrderServer: http://128.119.243.175:35660
+ CatalogServer: http://128.119.243.175:35640
+Stock of rpcdummies after buy operation is as expected: 35807
+Initial stock of impstudent is 55374
+Now updating stock of impstudent to 55678
+Updated stock of book: impstudent to 55678
+Stock of impstudent after update operation is as expected: 55678
+Now buying 304 units of impstudent
+This buy request was served by:
+ OrderServer: http://128.119.243.175:35660
+ CatalogServer: http://128.119.243.175:35640
+Stock of impstudent after buy operation is as expected: 55374
+Initial stock of project3 is 57840
+Now updating stock of project3 to 58180
+Updated stock of book: project3 to 58180
+Stock of project3 after update operation is as expected: 58180
+Now buying 340 units of project3
+This buy request was served by:
+ OrderServer: http://128.119.243.175:35660
+ CatalogServer: http://128.119.243.175:35640
+Stock of project3 after buy operation is as expected: 57840
+Initial stock of pioneer is 49725
+Now updating stock of pioneer to 49817
+Updated stock of book: pioneer to 49817
+Stock of pioneer after update operation is as expected: 49817
+Now buying 92 units of pioneer
+This buy request was served by:
+ OrderServer: http://128.119.243.175:35660
+ CatalogServer: http://128.119.243.175:35640
+Stock of pioneer after buy operation is as expected: 49725
+Initial stock of whytheory is 39856
+Now updating stock of whytheory to 40244
+Updated stock of book: whytheory to 40244
+Stock of whytheory after update operation is as expected: 40244
+Now buying 388 units of whytheory
+This buy request was served by:
+ OrderServer: http://128.119.243.175:35660
+ CatalogServer: http://128.119.243.175:35640
+Stock of whytheory after buy operation is as expected: 39856
+
+Passed test #
+===============================================================================
+
+Restarting the stopped catalog-server replica..
+Restarted Catalog-Server @ elnux1.cs.umass.edu
+Restarting the stopped order-server replica..
+Waiting for some time to ensure that restarted replicas are added to the load-balancers..
+
+Clearing cached responses from UIServer again..
+
+Checking search/lookup/buy are redirected to the restarted replica..
+
+
+===============================================================================
+Starting test #
+===============================================================================
+
+
+Testing /search endpoint when exactly one of the catalog-server replicas is down..
+/search/distributed-systems fetched correct number of books!
+/search/distributed-systems fetched all the correct books!
+/search/graduate-school fetched correct number of books!
+/search/graduate-school fetched all the correct books!
+
+Testing /lookup endpoint when exactly one of the catalog-server replicas is down..
+/lookup/impstudent fetched all the correct details for the book!
+This request was served by http://128.119.243.147:35640
+/lookup/xenart177 fetched all the correct details for the book!
+/lookup/67720min fetched all the correct details for the book!
+This request was served by http://128.119.243.147:35640
+/lookup/rpcdummies fetched all the correct details for the book!
+The restarted replica is up and running and is processing requests!!
+
+Passed test #
+===============================================================================
+
+
+
+===============================================================================
+Starting test #
+===============================================================================
+
+Initial stock of xenart177 is 44827
+Now updating stock of xenart177 to 44914
+Updated stock of book: xenart177 to 44914
+Stock of xenart177 after update operation is as expected: 44914
+Now buying 87 units of xenart177
+This buy request was served by:
+ OrderServer: http://128.119.243.175:35660
+ CatalogServer: http://128.119.243.175:35640
+Stock of xenart177 after buy operation is as expected: 44827
+Initial stock of 67720min is 34882
+Now updating stock of 67720min to 35182
+Updated stock of book: 67720min to 35182
+Stock of 67720min after update operation is as expected: 35182
+Now buying 300 units of 67720min
+This buy request was served by:
+ OrderServer: http://128.119.243.168:35660
+ CatalogServer: http://128.119.243.175:35640
+Stock of 67720min after buy operation is as expected: 34882
+Initial stock of rpcdummies is 35807
+Now updating stock of rpcdummies to 36166
+Updated stock of book: rpcdummies to 36166
+Stock of rpcdummies after update operation is as expected: 36166
+Now buying 359 units of rpcdummies
+This buy request was served by:
+ OrderServer: http://128.119.243.175:35660
+ CatalogServer: http://128.119.243.147:35640
+Stock of rpcdummies after buy operation is as expected: 35807
+Initial stock of impstudent is 55374
+Now updating stock of impstudent to 55860
+Updated stock of book: impstudent to 55860
+Stock of impstudent after update operation is as expected: 55860
+Now buying 486 units of impstudent
+This buy request was served by:
+ OrderServer: http://128.119.243.168:35660
+ CatalogServer: http://128.119.243.147:35640
+Stock of impstudent after buy operation is as expected: 55374
+Initial stock of project3 is 57840
+Now updating stock of project3 to 58123
+Updated stock of book: project3 to 58123
+Stock of project3 after update operation is as expected: 58123
+Now buying 283 units of project3
+This buy request was served by:
+ OrderServer: http://128.119.243.175:35660
+ CatalogServer: http://128.119.243.175:35640
+Stock of project3 after buy operation is as expected: 57840
+Initial stock of pioneer is 49725
+Now updating stock of pioneer to 50156
+Updated stock of book: pioneer to 50156
+Stock of pioneer after update operation is as expected: 50156
+Now buying 431 units of pioneer
+This buy request was served by:
+ OrderServer: http://128.119.243.168:35660
+ CatalogServer: http://128.119.243.175:35640
+Stock of pioneer after buy operation is as expected: 49725
+Initial stock of whytheory is 39856
+Now updating stock of whytheory to 39885
+Updated stock of book: whytheory to 39885
+Stock of whytheory after update operation is as expected: 39885
+Now buying 29 units of whytheory
+This buy request was served by:
+ OrderServer: http://128.119.243.175:35660
+ CatalogServer: http://128.119.243.147:35640
+Stock of whytheory after buy operation is as expected: 39856
+The restarted replicas are up and running and are already processing requests!!
+
+Passed test #
+===============================================================================
+
