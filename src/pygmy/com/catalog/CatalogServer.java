@@ -327,7 +327,7 @@ public class CatalogServer {
             return "Stopped!";
         });
 
-        Thread.sleep(1000);
+        Thread.sleep(2000);
 
         // introduce self to the front-end server
         introduceSelfToUIServer();
@@ -544,8 +544,7 @@ public class CatalogServer {
 
                         // do it again after 20 seconds
                         Thread.sleep(10000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
                     }
                 }
             }

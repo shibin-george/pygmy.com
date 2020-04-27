@@ -169,7 +169,7 @@ public class OrderServer {
             return "Stopped!";
         });
 
-        Thread.sleep(1000);
+        Thread.sleep(2000);
 
         // now that everything is done (including possibly recovery),
         // introduce self to the front-end server
