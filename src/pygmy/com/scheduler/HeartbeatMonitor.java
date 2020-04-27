@@ -9,7 +9,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import config.Config;
+import pygmy.com.utils.HttpRESTUtils;
+
 public class HeartbeatMonitor<JobIDType, JobParameterType, LoadBalancerType, JobResponseType> {
+
+    private static final int HTTP_ALIVE_TIMEOUT = 1000;
 
     private HashMap<JobIDType, Long> requestStartTimeStateMachine;
     private HashMap<JobIDType, PygmyJob<JobIDType, JobParameterType, LoadBalancerType>> jobMap;
@@ -61,12 +66,16 @@ public class HeartbeatMonitor<JobIDType, JobParameterType, LoadBalancerType, Job
         Iterator<Entry<JobIDType, Long>> it =
                 requestStartTimeStateMachine.entrySet().iterator();
         HashSet<LoadBalancerType> faultyServers = new HashSet<LoadBalancerType>();
+
         while (it.hasNext()) {
             Map.Entry<JobIDType, Long> entry = it.next();
+            LoadBalancerType server = (LoadBalancerType) jobMap.get(entry.getKey()).getServedBy();
             if (currentTime - entry.getValue() > JOB_TIMEOUT_IN_MILLISECONDS) {
-                // System.out.println("crap on a cracker " + (currentTime - entry.getValue()));
-                faultyServers.add((LoadBalancerType) jobMap.get(entry.getKey()).getServedBy());
-                incompleteJobs.add(jobMap.get(entry.getKey()));
+                if (!isServerAlive(server)) {
+                    // server seems to be really dead
+                    faultyServers.add(server);
+                    incompleteJobs.add(jobMap.get(entry.getKey()));
+                }
             }
         }
 
@@ -95,6 +104,20 @@ public class HeartbeatMonitor<JobIDType, JobParameterType, LoadBalancerType, Job
 
     public synchronized void addResponse(JobIDType jobId, JobResponseType response) {
         responseMap.put(jobId, response);
+    }
+
+    // all servers in registered with the scheduler
+    // should have exposed /heartbeat endpoint which we will
+    // use to check if server is actually dead before removing
+    // it from load-balancer
+    private boolean isServerAlive(LoadBalancerType server) {
+        String response = HttpRESTUtils.httpGet(server + "/heartbeat",
+                HTTP_ALIVE_TIMEOUT, Config.DEBUG);
+
+        if (response == null)
+            return false;
+
+        return true;
     }
 
     // Used to get time in a readable format for logging

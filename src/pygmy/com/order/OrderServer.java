@@ -161,6 +161,12 @@ public class OrderServer {
             return UIServer.getDummyJSONObject();
         });
 
+        // REST end-point for heartbeat
+        get("/heartbeat", (req, res) -> {
+            res.type("application/json");
+            return UIServer.getDummyJSONObject();
+        });
+
         // REST end-point for graceful-shutdown
         get("/stop", (req, res) -> {
             res.type("application/json");

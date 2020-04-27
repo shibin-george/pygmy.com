@@ -41,7 +41,7 @@ public class CatalogServer {
     private static TaskQueue<String, JSONObject, JSONObject> updateTaskQueue = null;
     private static Thread executorThread;
 
-    private static int MAX_JOBS_IN_QUEUE = 5;
+    private static int MAX_JOBS_IN_QUEUE = 100;
 
     private static HashSet<String> catalogReplicas = null;
 
@@ -304,9 +304,6 @@ public class CatalogServer {
         // REST end-point for heartbeat
         get("/heartbeat", (req, res) -> {
             res.type("application/json");
-
-            // System.out.println("HeartBeat from replica server..");
-
             return UIServer.getDummyJSONObject();
         });
 
