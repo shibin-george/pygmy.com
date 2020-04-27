@@ -1,3 +1,4 @@
-# 677 Lab 3
+# The new pygmy.com
 
-This is the Git repo for 677 Lab 3. See https://marcoserafini.github.io/teaching/distributed-os/spring20/labs/lab3.html for a description of the lab. The lab is due on Apr 24th, 11:59 pm. Prior to submitting your project, replace this README file with the one that explains how to setup and run your code. Be sure to provide enough details fo us to run it in order to grade it.
+## How to run?
+Please see the "How to run?" section of the [Design Document](https://github.com/ds-umass/lab-3-lab-3-george-raghavan/blob/master/docs/DesignDoc.pdf) for detailed instructions on how to deploy the servers, how to run the client-side command-line based program, and how to run the experiments (cache-consistency, fault-tolerance/recovery), and how to run the dockerized pygmy.com !
