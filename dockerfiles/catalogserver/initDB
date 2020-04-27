@@ -1,0 +1,48 @@
+7
+How to get a good grade in 677 in 20 minutes a day.
+distributed-systems
+67720min
+20
+35000
+RPCs for Dummies.
+distributed-systems
+rpcdummies
+15
+36000
+Xen and the Art of Surviving Graduate School.
+graduate-school
+xenart177
+25
+45000
+Cooking for the Impatient Graduate Student.
+graduate-school
+impstudent
+30
+55500
+Spring in the Pioneer Valley.
+graduate-school
+pioneer
+25
+50000
+Why theory classes are so hard.
+graduate-school
+whytheory
+30
+40000
+How to finish Project 3 on time
+distributed-systems
+project3
+35
+58000
+
+
+# anything below this line is not parsed
+# format of the initDB file
+# Line 1: number of unique books, 4 in our case
+# Descriptions of 4 books follow.
+# Each book's descriptions have the following format:
+# Line 1: Title of the book
+# Line 2: Topic of the book
+# Line 3: unique alphanumeric id of the book
+# Line 4: Cost of the book
+# Line 5: Initial stock of the book
